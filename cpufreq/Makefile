@@ -18,23 +18,21 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 # Contributors:
-#     Torez Smith <torez.smith@linaro.org> (IBM Corporation)
+#     Daniel Lezcano <daniel.lezcano@linaro.org> (IBM Corporation)
 #       - initial API and implementation
 #
 
-all:
-	@(cd utils; $(MAKE))
-	@(cd testcases; $(MAKE) all)
+TST=$(wildcard *.sh)
+LOG=$(TST:.sh=.log)
 
-check:
-	@(cd utils; $(MAKE) check)
-	@(cd cpufreq; $(MAKE) check)
-uncheck:
-	@(cd cpufreq; $(MAKE) uncheck)
+check: $(LOG)
 
-recheck: uncheck check
+%.log: %.sh
+	@./$<
 
 clean:
-	@(cd utils; $(MAKE) clean)
-	@(cd testcases; $(MAKE) clean)
+	rm -f $(LOG)
 
+uncheck: clean
+
+recheck: uncheck check
