@@ -25,10 +25,10 @@
 TST=$(wildcard *.sh)
 LOG=$(TST:.sh=.log)
 
-check: $(LOG)
+check: uncheck $(LOG)
 
 %.log: %.sh
-	@./$<
+	@./$< 2> $@
 
 clean:
 	rm -f $(LOG)
