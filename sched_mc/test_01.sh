@@ -1,3 +1,4 @@
+#!/bin/bash
 #
 # PM-QA validation test suite for the power management on ARM
 #
@@ -18,26 +19,14 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 # Contributors:
-#     Torez Smith <torez.smith@linaro.org> (IBM Corporation)
+#     Daniel Lezcano <daniel.lezcano@linaro.org> (IBM Corporation)
 #       - initial API and implementation
 #
 
-all:
-	@(cd utils; $(MAKE))
-	@(cd testcases; $(MAKE) all)
+# URL : https://wiki.linaro.org/WorkingGroups/PowerManagement/Doc/QA/Scripts#sched_mc_01
 
-check:
-	@(cd utils; $(MAKE) check)
-	@(cd cpufreq; $(MAKE) check)
-	@(cd sched_mc; $(MAKE) check)
+source ../include/functions.sh
 
-uncheck:
-	@(cd cpufreq; $(MAKE) uncheck)
-	@(cd sched_mc; $(MAKE) uncheck)
+FILES="sched_mc_power_savings"
 
-recheck: uncheck check
-
-clean:
-	@(cd utils; $(MAKE) clean)
-	@(cd testcases; $(MAKE) clean)
-
+check_sched_mc_files $FILES
