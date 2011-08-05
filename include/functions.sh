@@ -208,6 +208,18 @@ check_sched_mc_files() {
     return 0
 }
 
+check_topology_files() {
+
+    local dirpath=$CPU_PATH/$1/topology
+    shift 1
+
+    for i in $@; do
+	check "$i exists" "test -f" $dirpath/$i  || return 1
+    done
+
+    return 0
+}
+
 save_governors() {
 
     governors_backup=
