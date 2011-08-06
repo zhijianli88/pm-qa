@@ -25,8 +25,8 @@
 
 CPU_PATH="/sys/devices/system/cpu"
 TEST_NAME=$(basename ${0%.sh})
-PREFIX=$TEST_NAME
 BLOCK=$(basename $(pwd))
+PREFIX=$BLOCK:$TEST_NAME
 
 setprefix_cpu() {
     PREFIX=$BLOCK:$TEST_NAME/$1
