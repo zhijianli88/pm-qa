@@ -25,15 +25,13 @@
 
 CPU_PATH="/sys/devices/system/cpu"
 TEST_NAME=$(basename ${0%.sh})
-BLOCK=$(basename $(pwd))
-PREFIX=$BLOCK:$TEST_NAME
-
-setprefix_cpu() {
-    PREFIX=$BLOCK:$TEST_NAME/$1
-}
+PREFIX=$TEST_NAME
+INC=0
+CPU=
 
 log_begin() {
-    printf "%-75s" "$PREFIX $@ ... "
+    printf "%-76s" "$TEST_NAME.$INC$CPU $@... "
+    INC=$(($INC+1))
 }
 
 log_end() {
@@ -53,7 +51,8 @@ for_each_cpu() {
     cpus=$(ls $CPU_PATH | grep "cpu[0-9].*")
 
     for cpu in $cpus; do
-	setprefix_cpu $cpu
+	INC=0
+	CPU=/$cpu
 	$func $cpu $@
     done
 
