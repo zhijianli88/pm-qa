@@ -28,6 +28,8 @@ LOG=$(TST:.sh=.log)
 check: uncheck $(LOG)
 
 %.log: %.sh
+	@echo -e "###\n### $(<:.sh=):"
+	@echo -n "### "; cat $(<:.sh=.txt); echo "###"
 	@./$< 2> $@
 
 clean:
