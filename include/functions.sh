@@ -40,7 +40,7 @@ log_end() {
 
 log_skip() {
     log_begin "$@"
-    log_end "SKIP"
+    log_end "skip"
 }
 
 for_each_cpu() {
@@ -175,11 +175,11 @@ check() {
 
     $func $@
     if [ $? != 0 ]; then
-	log_end "FAIL"
+	log_end "fail"
 	return 1
     fi
 
-    log_end "PASS"
+    log_end "pass"
 
     return 0
 }
