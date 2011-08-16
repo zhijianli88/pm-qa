@@ -30,7 +30,7 @@ INC=0
 CPU=
 
 log_begin() {
-    printf "%-76s" "$TEST_NAME.$INC$CPU $@... "
+    printf "%-76s" "$TEST_NAME.$INC$CPU: $@... "
     INC=$(($INC+1))
 }
 
