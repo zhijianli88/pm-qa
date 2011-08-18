@@ -51,19 +51,26 @@ switch_userspace() {
     set_governor $cpu 'userspace'
 }
 
-for_each_cpu switch_ondemand
+for cpu in $(ls $CPU_PATH | grep "cpu[0-9].*"); do
+    switch_ondemand $cpu
+done
 check "'ondemand' directory exists" "test -d $CPU_PATH/cpufreq/ondemand"
 
-for_each_cpu switch_conservative
+for cpu in $(ls $CPU_PATH | grep "cpu[0-9].*"); do
+    switch_conservative $cpu
+done
 check "'conservative' directory exists" "test -d $CPU_PATH/cpufreq/conservative"
 
-for_each_cpu switch_userspace
+for cpu in $(ls $CPU_PATH | grep "cpu[0-9].*"); do
+    switch_userspace $cpu
+done
+
 check "'ondemand' directory is not there" "test ! -d $CPU_PATH/cpufreq/ondemand"
 check "'conservative' directory is not there" "test ! -d $CPU_PATH/cpufreq/conservative"
 
 # if more than one cpu, combine governors
 nrcpus=$(ls $CPU_PATH | grep "cpu[0-9].*" | wc -l)
-if [ $nrcpus > 0 ]; then
+if [ $nrcpus > 1 ]; then
     switch_ondemand cpu0
     switch_conservative cpu1
     check "'ondemand' directory exists" "test -d $CPU_PATH/cpufreq/ondemand"
