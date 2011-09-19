@@ -109,8 +109,18 @@ get_governor() {
 wait_latency() {
     local cpu=$1
     local dirpath=$CPU_PATH/$cpu/cpufreq
-    local latency=$(cat $dirpath/cpuinfo_transition_latency)
-    local nrfreq=$(cat $dirpath/scaling_available_frequencies | wc -w)
+    local latency=
+    local nrfreq=
+
+    latency=$(cat $dirpath/cpuinfo_transition_latency)
+    if [ $? != 0 ]; then
+	return -1
+    fi
+
+    nrfreq=$(cat $dirpath/scaling_available_frequencies | wc -w)
+    if [ $? != 0 ]; then
+	return -1
+    fi
 
     nrfreq=$((nrfreq + 1))
     ../utils/nanosleep $(($nrfreq * $latency))
