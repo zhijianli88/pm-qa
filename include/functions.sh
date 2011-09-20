@@ -114,12 +114,12 @@ wait_latency() {
 
     latency=$(cat $dirpath/cpuinfo_transition_latency)
     if [ $? != 0 ]; then
-	return -1
+	return 1
     fi
 
     nrfreq=$(cat $dirpath/scaling_available_frequencies | wc -w)
     if [ $? != 0 ]; then
-	return -1
+	return 1
     fi
 
     nrfreq=$((nrfreq + 1))
