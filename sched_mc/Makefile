@@ -22,22 +22,4 @@
 #       - initial API and implementation
 #
 
-TST=$(wildcard *.sh)
-LOG=$(TST:.sh=.log)
-
-check: uncheck $(LOG)
-
-%.log: %.sh
-	@echo "###"
-	@echo "### $(<:.sh=):"
-	@echo -n "### "; cat $(<:.sh=.txt);
-	@echo -n "### "; grep "URL :" ./$< | awk '/http/{print $$NF}'
-	@echo "###"
-	@./$< 2> $@
-
-clean:
-	rm -f $(LOG)
-
-uncheck: clean
-
-recheck: uncheck check
+include ../Test.mk
