@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# PM-QA validation test suite for the power management on ARM
+# PM-QA validation test suite for the power management on Linux
 #
 # Copyright (C) 2011, Linaro Limited.
 #
