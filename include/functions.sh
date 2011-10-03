@@ -236,6 +236,18 @@ check_topology_files() {
     return 0
 }
 
+check_cpuhotplug_files() {
+
+    local dirpath=$CPU_PATH/$1
+    shift 1
+
+    for i in $@; do
+	check_file $i $dirpath || return 1
+    done
+
+    return 0
+}
+
 save_governors() {
 
     governors_backup=

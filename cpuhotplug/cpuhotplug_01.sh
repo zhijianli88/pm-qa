@@ -1,3 +1,4 @@
+#!/bin/bash
 #
 # PM-QA validation test suite for the power management on ARM
 #
@@ -18,28 +19,18 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 # Contributors:
-#     Torez Smith <torez.smith@linaro.org> (IBM Corporation)
+#     Daniel Lezcano <daniel.lezcano@linaro.org> (IBM Corporation)
 #       - initial API and implementation
 #
 
-all:
-	@(cd utils; $(MAKE))
-	@(cd testcases; $(MAKE) all)
+# URL : https://wiki.linaro.org/WorkingGroups/PowerManagement/Doc/QA/Scripts#cpuhotplug_01
 
-check:
-	@(cd utils; $(MAKE) check)
-	@(cd cpufreq; $(MAKE) check)
-	@(cd cpuhotplug; $(MAKE) check)
-	@(cd sched_mc; $(MAKE) check)
+source ../include/functions.sh
 
-uncheck:
-	@(cd cpufreq; $(MAKE) uncheck)
-	@(cd cpuhotplug; $(MAKE) uncheck)
-	@(cd sched_mc; $(MAKE) uncheck)
+FILES="online offline possible present"
 
-recheck: uncheck check
+for i in $FILES; do
+    check_file $i $CPU_PATH || return 1
+done
 
-clean:
-	@(cd utils; $(MAKE) clean)
-	@(cd testcases; $(MAKE) clean)
-
+for_each_cpu check_cpuhotplug_files online
