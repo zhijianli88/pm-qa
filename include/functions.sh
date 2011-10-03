@@ -194,13 +194,20 @@ check() {
     return 0
 }
 
+check_file() {
+    local file=$1
+    local dir=$2
+
+    check "'$file' exists" "test -f" $dir/$file
+}
+
 check_cpufreq_files() {
 
     local dirpath=$CPU_PATH/$1/cpufreq
     shift 1
 
     for i in $@; do
-	check "$i exists" "test -f" $dirpath/$i  || return 1
+	check_file $i $dirpath || return 1
     done
 
     return 0
@@ -211,7 +218,7 @@ check_sched_mc_files() {
     local dirpath=$CPU_PATH
 
     for i in $@; do
-	check "$i exists" "test -f" $dirpath/$i  || return 1
+	check_file $i $dirpath || return 1
     done
 
     return 0
@@ -223,7 +230,7 @@ check_topology_files() {
     shift 1
 
     for i in $@; do
-	check "$i exists" "test -f" $dirpath/$i  || return 1
+	check_file $i $dirpath || return 1
     done
 
     return 0
