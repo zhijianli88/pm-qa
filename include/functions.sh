@@ -175,6 +175,27 @@ get_min_frequency() {
     cat $dirpath
 }
 
+set_online() {
+    local cpu=$1
+    local dirpath=$CPU_PATH/$cpu
+
+    echo 1 > $dirpath/online
+}
+
+set_offline() {
+    local cpu=$1
+    local dirpath=$CPU_PATH/$cpu
+
+    echo 0 > $dirpath/online
+}
+
+get_online() {
+    local cpu=$1
+    local dirpath=$CPU_PATH/$cpu
+
+    cat $dirpath/online
+}
+
 check() {
 
     local descr=$1
