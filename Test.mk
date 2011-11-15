@@ -36,7 +36,7 @@ check: uncheck $(LOG)
 	@./$< 2> $@
 
 clean:
-	rm -f $(LOG)
+	@test ! -z "$(LOG)" && rm -f $(LOG)
 
 uncheck: clean
 
