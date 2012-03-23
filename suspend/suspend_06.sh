@@ -29,6 +29,7 @@
 source ../include/functions.sh
 source ../include/suspend.sh
 
+# test_repeat: switch on/off this test
 test_repeat=1
 auto=1
 args_repeat_iterations=5

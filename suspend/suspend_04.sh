@@ -29,7 +29,8 @@
 source ../include/functions.sh
 source ../include/suspend.sh
 
-test_power=1
+# test_power: switch on/off this test
+test_power=0
 auto=1
 args_power_sleep=60
 

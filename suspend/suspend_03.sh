@@ -29,7 +29,8 @@
 source ../include/functions.sh
 source ../include/suspend.sh
 
-test_ac=1
+# test_ac: switch on/off this test
+test_ac=0
 auto=1
 
 if [ "$test_ac" -eq 1 -a "$battery_count" -eq 0 ]; then

@@ -29,6 +29,7 @@
 source ../include/functions.sh
 source ../include/suspend.sh
 
+# test_dbus: switch on/off this test
 test_dbus=1
 auto=1
 

@@ -29,6 +29,7 @@
 source ../include/functions.sh
 source ../include/suspend.sh
 
+# test_timed: switch on/off this test
 test_timed=1
 auto=1
 

@@ -29,6 +29,7 @@
 source ../include/functions.sh
 source ../include/suspend.sh
 
+# test_pmsuspend: switch on/off this test
 test_pmsuspend=1
 auto=1
 
