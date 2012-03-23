@@ -1,7 +1,7 @@
 #
 # PM-QA validation test suite for the power management on Linux
 #
-# Copyright (C) 2011, Linaro Limited.
+# Copyright (C) 2012, Linaro Limited.
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -18,31 +18,8 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 # Contributors:
-#     Torez Smith <torez.smith@linaro.org> (IBM Corporation)
+#     Hongbo ZHANG <hongbo.zhang@linaro.org> (ST-Ericsson Corporation)
 #       - initial API and implementation
 #
 
-all:
-	@(cd utils; $(MAKE))
-	@(cd testcases; $(MAKE) all)
-
-check:
-	@(cd utils; $(MAKE) check)
-	@(cd cpufreq; $(MAKE) check)
-	@(cd cpuhotplug; $(MAKE) check)
-	@(cd cpuidle; $(MAKE) check)
-	@(cd sched_mc; $(MAKE) check)
-	@(cd suspend; $(MAKE) check)
-
-uncheck:
-	@(cd cpufreq; $(MAKE) uncheck)
-	@(cd cpuhotplug; $(MAKE) uncheck)
-	@(cd cpuidle; $(MAKE) uncheck)
-	@(cd sched_mc; $(MAKE) uncheck)
-
-recheck: uncheck check
-
-clean:
-	@(cd utils; $(MAKE) clean)
-	@(cd testcases; $(MAKE) clean)
-
+include ../Test.mk

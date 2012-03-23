@@ -1,7 +1,8 @@
+#!/bin/bash
 #
 # PM-QA validation test suite for the power management on Linux
 #
-# Copyright (C) 2011, Linaro Limited.
+# Copyright (C) 2012, Linaro Limited.
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -18,31 +19,30 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 # Contributors:
-#     Torez Smith <torez.smith@linaro.org> (IBM Corporation)
+#     Hongbo ZHANG <hongbo.zhang@linaro.org> (ST-Ericsson Corporation)
 #       - initial API and implementation
 #
 
-all:
-	@(cd utils; $(MAKE))
-	@(cd testcases; $(MAKE) all)
+# URL : https://wiki.linaro.org/WorkingGroups/PowerManagement/Doc/QA/Scripts#suspend_01
 
-check:
-	@(cd utils; $(MAKE) check)
-	@(cd cpufreq; $(MAKE) check)
-	@(cd cpuhotplug; $(MAKE) check)
-	@(cd cpuidle; $(MAKE) check)
-	@(cd sched_mc; $(MAKE) check)
-	@(cd suspend; $(MAKE) check)
 
-uncheck:
-	@(cd cpufreq; $(MAKE) uncheck)
-	@(cd cpuhotplug; $(MAKE) uncheck)
-	@(cd cpuidle; $(MAKE) uncheck)
-	@(cd sched_mc; $(MAKE) uncheck)
+source ../include/functions.sh
+source ../include/suspend.sh
 
-recheck: uncheck check
+test_dbus=1
+auto=1
 
-clean:
-	@(cd utils; $(MAKE) clean)
-	@(cd testcases; $(MAKE) clean)
+if [ "$test_dbus" -eq 1 -a \
+		\( "$SUDO_USER" = "" -o "$SUDO_USER" = "root" \) ]; then
+	ECHO "*** no primary user (via sudo) dbus tests skipped ..."
+elif [ "$test_dbus" -eq 1 ]; then
+	ac_required 1
+	suspend_dbus=1
+	phase
+	check "suspend via dbus message" suspend_system 
+	if [ $? -eq 0 ]; then
+		rm -f "$LOGFILE"
+	fi
+	suspend_dbus=0
+fi
 

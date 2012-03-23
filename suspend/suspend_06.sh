@@ -1,7 +1,8 @@
+#!/bin/bash
 #
 # PM-QA validation test suite for the power management on Linux
 #
-# Copyright (C) 2011, Linaro Limited.
+# Copyright (C) 2012, Linaro Limited.
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -18,31 +19,37 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 # Contributors:
-#     Torez Smith <torez.smith@linaro.org> (IBM Corporation)
+#     Hongbo ZHANG <hongbo.zhang@linaro.org> (ST-Ericsson Corporation)
 #       - initial API and implementation
 #
 
-all:
-	@(cd utils; $(MAKE))
-	@(cd testcases; $(MAKE) all)
+# URL : https://wiki.linaro.org/WorkingGroups/PowerManagement/Doc/QA/Scripts#suspend_06
 
-check:
-	@(cd utils; $(MAKE) check)
-	@(cd cpufreq; $(MAKE) check)
-	@(cd cpuhotplug; $(MAKE) check)
-	@(cd cpuidle; $(MAKE) check)
-	@(cd sched_mc; $(MAKE) check)
-	@(cd suspend; $(MAKE) check)
 
-uncheck:
-	@(cd cpufreq; $(MAKE) uncheck)
-	@(cd cpuhotplug; $(MAKE) uncheck)
-	@(cd cpuidle; $(MAKE) uncheck)
-	@(cd sched_mc; $(MAKE) uncheck)
+source ../include/functions.sh
+source ../include/suspend.sh
 
-recheck: uncheck check
+test_repeat=1
+auto=1
+args_repeat_iterations=5
 
-clean:
-	@(cd utils; $(MAKE) clean)
-	@(cd testcases; $(MAKE) clean)
+if [ "$test_repeat" -eq 1 ]; then
+	ac_required 1
+
+	CNT=1
+	TOTAL=$args_repeat_iterations
+
+	phase
+	while [ "$CNT" -le "$TOTAL" ]
+	do
+		ECHO "Suspend iteration $CNT of $TOTAL"
+		check "iteration suspend/resume stress test" suspend_system
+		delay_system
+
+		(( CNT++ ))
+	done
+	if [ $? -eq 0 ]; then
+		rm -f "$LOGFILE"
+	fi
+fi
 
