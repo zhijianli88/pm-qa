@@ -1,0 +1,1 @@
+test/verify that temperature is increasing/decreasing as the load is increased/decreased
