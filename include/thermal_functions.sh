@@ -153,3 +153,19 @@ validate_trip_level() {
     check_file $trip_type $dirpath || return 1
     check_valid_temp $trip_temp $zone_name || return 1
 }
+
+for_each_cooling_device() {
+
+    local func=$1
+    shift 1
+
+    devices=$(ls $THERMAL_PATH | grep "cooling_device['$MAX_CDEV']")
+
+    ALL_DEVICE=$devices
+    for device in $devices; do
+	INC=0
+	$func $device $@
+    done
+
+    return 0
+}

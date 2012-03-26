@@ -1,0 +1,1 @@
+test/verify the cooling device files are present in the sysfs
