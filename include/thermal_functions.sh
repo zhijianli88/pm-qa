@@ -169,3 +169,30 @@ for_each_cooling_device() {
 
     return 0
 }
+check_scaling_freq() {
+
+    local before_freq_list=$1
+    local after_freq_list=$2
+    shift 2
+    local index=0
+
+    local flag=0
+    for cpu in $(ls $CPU_PATH | grep "cpu[0-9].*"); do
+	if [ $before_freq_list[$index] != $afterf_req_list[$index] ] ; then
+	    flag=1	
+	fi
+        index=$((index + 1)) 
+    done
+    return $flag
+}
+
+store_scaling_maxfreq() {
+    scale_freq=
+    local index=0
+
+    for cpu in $(ls $CPU_PATH | grep "cpu[0-9].*"); do
+	scale_freq[$index]=$(cat $CPU_PATH/$cpu/cpufreq/scaling_max_freq)
+        index=$((index + 1))
+    done
+    return 0
+}
