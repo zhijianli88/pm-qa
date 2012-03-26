@@ -1,0 +1,1 @@
+test/verify the thermal zone files are present in the sysfs and check the validity of the mode field, bindings and trip temperatures
