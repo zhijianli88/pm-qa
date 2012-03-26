@@ -196,3 +196,16 @@ store_scaling_maxfreq() {
     done
     return 0
 }
+
+get_trip_id() {
+
+    local trip_name=$1
+    shift 1
+
+    local id1=$(echo $trip_name|cut -c12)
+    local id2=$(echo $trip_name|cut -c13)
+    if [ $id2 != "_" ]; then
+	id1=$(($id2 + 10*$id1))
+    fi
+    return $id1
+}

@@ -1,0 +1,1 @@
+test/verify that different trip points are crossed when load is maximum
