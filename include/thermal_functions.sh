@@ -74,7 +74,7 @@ get_total_trip_point_of_zone() {
     local count=0
     shift 1
     trips=$(ls $zone_path | grep "trip_point_['$MAX_ZONE']_temp")
-    for zone in $zones; do
+    for trip in $trips; do
 	count=$((count + 1))
     done
     return $count
@@ -85,10 +85,11 @@ for_each_trip_point_of_zone() {
     local zone_path=$THERMAL_PATH/$1
     local count=0
     local func=$2
+    local zone_name=$1
     shift 2
     trips=$(ls $zone_path | grep "trip_point_['$MAX_ZONE']_temp")
     for trip in $trips; do
-	$func $zone $count
+	$func $zone_name $count
 	count=$((count + 1))
     done
     return 0
@@ -99,10 +100,11 @@ for_each_binding_of_zone() {
     local zone_path=$THERMAL_PATH/$1
     local count=0
     local func=$2
+    local zone_name=$1
     shift 2
     trips=$(ls $zone_path | grep "cdev['$MAX_CDEV']_trip_point")
     for trip in $trips; do
-	$func $zone $count
+	$func $zone_name $count
 	count=$((count + 1))
     done
 
@@ -115,8 +117,9 @@ check_valid_binding() {
     local zone_name=$2
     local dirpath=$THERMAL_PATH/$2
     local temp_file=$2/$1
-    local trip_point_val = $(cat $dirpath/$trip_point)
-    local trip_point_max = get_total_trip_point_of_zone $zone_name
+    local trip_point_val=$(cat $dirpath/$trip_point)
+    get_total_trip_point_of_zone $zone_name
+    local trip_point_max=$?
     local descr="'$temp_file' valid binding"
     shift 2
 

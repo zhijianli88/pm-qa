@@ -28,7 +28,7 @@
 source ../include/functions.sh
 source ../include/thermal_functions.sh
 
-ATTRIBUTES="mode passive temp type uevent"
+ATTRIBUTES="mode temp type uevent"
 
 check_thermal_zone_attributes() {
 
@@ -61,15 +61,19 @@ check_thermal_zone_mode() {
 }
 
 check_thermal_zone_trip_level() {
-    for i in $zones; do
+
+    local all_zones=$(ls $THERMAL_PATH | grep "thermal_zone['$MAX_ZONE']")
+    for i in $all_zones; do
 	for_each_trip_point_of_zone $i "validate_trip_level" || return 1
     done
 }
 
 check_thermal_zone_bindings() {
-   for i in $zones; do
+
+    local all_zones=$(ls $THERMAL_PATH | grep "thermal_zone['$MAX_ZONE']")
+    for i in $all_zones; do
 	for_each_binding_of_zone $i "validate_trip_bindings" || return 1
-   done
+    done
 }
 
 for_each_thermal_zone check_thermal_zone_attributes

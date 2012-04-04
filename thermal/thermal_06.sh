@@ -88,10 +88,10 @@ check_trip_point_change() {
 	index=$((index + 1))
     done
 
-    if [ $cpu_pid -ne 0 ]; then
+    if [ $cpu_pid != 0 ]; then
 	kill -9 $cpu_pid
     fi
-    if [ $gpu_pid -ne 0 ]; then
+    if [ $gpu_pid != 0 ]; then
 	kill -9 $gpu_pid
     fi
 }

@@ -135,8 +135,11 @@ int main(int arg_count, char *argv[])
 			return ret;
 		}
 #ifndef ANDROID
-		/* Make workload thread's very low priority */
+		/* Make workload thread's very low priority if allowed*/
+#ifdef SCHED_IDLE
 		ret = pthread_attr_setschedpolicy(&p[i], SCHED_IDLE);
+#endif
+
 #else
 		ret = pthread_attr_setschedpolicy(&p[i], SCHED_NORMAL);
 #endif

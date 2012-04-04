@@ -33,6 +33,7 @@ verify_cpufreq_cooling_device_action() {
     local cdev_name=$1
     shift 1
 
+    local tzonepath=$THERMAL_PATH/thermal_zone0
     local cpufreq_cdev=$(cat $dirpath/type)
     cat $dirpath/type | grep cpufreq
     if [ $? -ne 0  ] ; then

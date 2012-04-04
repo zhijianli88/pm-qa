@@ -27,7 +27,7 @@
 
 source ../include/functions.sh
 source ../include/thermal_functions.sh
-HEAT_CPU_MODERATE=../utils/heat_cpu moderate
+HEAT_CPU_MODERATE=../utils/heat_cpu
 
 verify_cooling_device_temp_change() {
     local dirpath=$THERMAL_PATH/$1
@@ -49,7 +49,7 @@ verify_cooling_device_temp_change() {
     local init_temp=0
     local final_temp=0
     local cool_temp=0
-    ./$HEAT_CPU_MODERATE &
+    ./$HEAT_CPU_MODERATE moderate &
     pid=$!
 
     while (test $count -le $max_state); do
@@ -62,7 +62,7 @@ verify_cooling_device_temp_change() {
 	final_temp=$(cat $tzonepath/temp)
 	cool_temp=$(($init_temp - $final_temp))
 	check "$cdev_name:state=$count effective cool=$cool_temp "\
-					"test $final_temp -lt $init_temp"
+					"test $cool_temp -ge 0"
 	count=$((count+1))
     done
     kill -9 $pid

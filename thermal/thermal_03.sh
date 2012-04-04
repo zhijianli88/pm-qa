@@ -48,10 +48,10 @@ check_temperature_change() {
     check "start gpu heat binary" "test $gpu_pid -ne 0"
     sleep 5
     local final_temp=$(cat $dirpath/temp)
-    if [ $cpu_pid -ne 0 ]; then
+    if [ $cpu_pid != 0 ]; then
 	kill -9 $cpu_pid
     fi
-    if [ $gpu_pid -ne 0 ]; then
+    if [ $gpu_pid != 0 ]; then
 	kill -9 $gpu_pid
     fi
     check "temperature variation with load" "test $final_temp -gt $init_temp"
