@@ -212,3 +212,29 @@ get_trip_id() {
     fi
     return $id1
 }
+
+disable_all_thermal_zones() {
+
+    mode_list=
+    local index=0
+
+    local th_zones=$(ls $THERMAL_PATH | grep "thermal_zone['$MAX_ZONE']")
+    for zone in $th_zones; do
+	mode_list[$index]=$(cat $THERMAL_PATH/$zone/mode)
+        index=$((index + 1))
+	echo -n "disabled" > $THERMAL_PATH/$zone/mode
+    done
+    return 0
+}
+
+enable_all_thermal_zones() {
+
+    local index=0
+
+    local th_zones=$(ls $THERMAL_PATH | grep "thermal_zone['$MAX_ZONE']")
+    for zone in $th_zones; do
+	echo $mode_list[$index] > $THERMAL_PATH/$zone/mode
+        index=$((index + 1))
+    done
+    return 0
+}

@@ -33,7 +33,6 @@ verify_cpufreq_cooling_device_action() {
     local cdev_name=$1
     shift 1
 
-    local tzonepath=$THERMAL_PATH/thermal_zone0
     local cpufreq_cdev=$(cat $dirpath/type)
     cat $dirpath/type | grep cpufreq
     if [ $? -ne 0  ] ; then
@@ -42,8 +41,7 @@ verify_cpufreq_cooling_device_action() {
 
     local max_state=$(cat $dirpath/max_state)
     local prev_state_val=$(cat $dirpath/cur_state)
-    local prev_mode_val=$(cat $tzonepath/mode)
-    echo -n disabled > $tzonepath/mode
+    disable_all_thermal_zones
 
     local count=1
     local before_scale_max=0
@@ -70,7 +68,7 @@ verify_cpufreq_cooling_device_action() {
 
 	count=$((count+1))
     done
-    echo $prev_mode_val > $tzonepath/mode
+    enable_all_thermal_zones
     echo $prev_state_val > $dirpath/cur_state
 }
 for_each_cooling_device verify_cpufreq_cooling_device_action
