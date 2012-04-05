@@ -1,3 +1,4 @@
+#!/bin/bash
 #
 # PM-QA validation test suite for the power management on Linux
 #
@@ -22,27 +23,38 @@
 #       - initial API and implementation
 #
 
-TST=$(wildcard *.sh)
-LOG=$(TST:.sh=.log)
-CFLAGS?=-g -Wall
-CC?=gcc
-SRC=$(wildcard *.c)
-EXEC=$(SRC:%.c=%)
+# URL : https://wiki.linaro.org/WorkingGroups/PowerManagement/Doc/QA/Scripts#cpuidle_03
 
-check: uncheck $(EXEC) $(LOG)
+source ../include/functions.sh
 
-%.log: %.sh
-	@echo "###"
-	@echo "### $(<:.sh=):"
-	@echo -n "### "; cat $(<:.sh=.txt);
-	@echo -n "### "; grep "URL :" ./$< | awk '/http/{print $$NF}'
-	@echo "###"
-	@./$< 2> $@
+CPUIDLE_KILLER=./cpuidle_killer
 
-clean:
-	rm -f *.o $(EXEC)
+if [ $(id -u) != 0 ]; then
+    log_skip "run as non-root"
+    exit 0
+fi
 
-uncheck:
-	-@test ! -z "$(LOG)" && rm -f $(LOG)
+restore_cpus() {
+    for_each_cpu set_online
+}
 
-recheck: uncheck check
+check_cpuidle_kill() {
+
+    if [ "$1" = "cpu0" ]; then
+	log_skip "skipping cpu0"
+	return 0
+    fi
+
+    set_offline $1
+    check "cpuidle program runs successfully (120 secs)" "./$CPUIDLE_KILLER"
+}
+
+if [ $(id -u) != 0 ]; then
+    log_skip "run as non-root"
+    exit 0
+fi
+
+trap "restore_cpus; sigtrap" SIGHUP SIGINT SIGTERM
+
+for_each_cpu check_cpuidle_kill
+restore_cpus

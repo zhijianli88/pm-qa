@@ -1,3 +1,4 @@
+#!/bin/bash
 #
 # PM-QA validation test suite for the power management on Linux
 #
@@ -22,27 +23,15 @@
 #       - initial API and implementation
 #
 
-TST=$(wildcard *.sh)
-LOG=$(TST:.sh=.log)
-CFLAGS?=-g -Wall
-CC?=gcc
-SRC=$(wildcard *.c)
-EXEC=$(SRC:%.c=%)
+# URL : https://wiki.linaro.org/WorkingGroups/PowerManagement/Doc/QA/Scripts#cpuidle_02
 
-check: uncheck $(EXEC) $(LOG)
+source ../include/functions.sh
 
-%.log: %.sh
-	@echo "###"
-	@echo "### $(<:.sh=):"
-	@echo -n "### "; cat $(<:.sh=.txt);
-	@echo -n "### "; grep "URL :" ./$< | awk '/http/{print $$NF}'
-	@echo "###"
-	@./$< 2> $@
+CPUIDLE_KILLER=./cpuidle_killer
 
-clean:
-	rm -f *.o $(EXEC)
+if [ $(id -u) != 0 ]; then
+    log_skip "run as non-root"
+    exit 0
+fi
 
-uncheck:
-	-@test ! -z "$(LOG)" && rm -f $(LOG)
-
-recheck: uncheck check
+check "cpuidle program runs successfully (120 secs)" "./$CPUIDLE_KILLER"

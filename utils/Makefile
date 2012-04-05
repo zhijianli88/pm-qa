@@ -22,14 +22,4 @@
 #       - initial API and implementation
 #
 
-CFLAGS?=-g -Wall
-CC?=gcc
-SRC=$(wildcard *.c)
-EXEC=$(SRC:%.c=%)
-
-check: $(EXEC)
-
-all: $(EXEC)
-
-clean:
-	rm -f *.o $(EXEC)
+include ../Test.mk

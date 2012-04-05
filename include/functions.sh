@@ -179,12 +179,20 @@ set_online() {
     local cpu=$1
     local dirpath=$CPU_PATH/$cpu
 
+    if [ "$cpu" = "cpu0" ]; then
+	return 0
+    fi
+
     echo 1 > $dirpath/online
 }
 
 set_offline() {
     local cpu=$1
     local dirpath=$CPU_PATH/$cpu
+
+    if [ "$cpu" = "cpu0" ]; then
+	return 0
+    fi
 
     echo 0 > $dirpath/online
 }

@@ -1,0 +1,1 @@
+Run a cpuidle program killer and unplug one by one the cpus (except cpu0)
