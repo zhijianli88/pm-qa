@@ -32,14 +32,15 @@ check:
 	@(cd cpuhotplug; $(MAKE) check)
 	@(cd cpuidle; $(MAKE) check)
 	@(cd sched_mc; $(MAKE) check)
-	@(cd suspend; $(MAKE) check)
-	@(cd thermal; $(MAKE) check)
+#	@(cd suspend; $(MAKE) check)
+#	@(cd thermal; $(MAKE) check)
 
 uncheck:
 	@(cd cpufreq; $(MAKE) uncheck)
 	@(cd cpuhotplug; $(MAKE) uncheck)
 	@(cd cpuidle; $(MAKE) uncheck)
 	@(cd sched_mc; $(MAKE) uncheck)
+	@(cd suspend; $(MAKE) uncheck)
 	@(cd thermal; $(MAKE) uncheck)
 
 recheck: uncheck check

@@ -24,7 +24,7 @@
 
 TST=$(wildcard *.sh)
 LOG=$(TST:.sh=.log)
-CFLAGS?=-g -Wall
+CFLAGS?=-g -Wall -pthread
 CC?=gcc
 SRC=$(wildcard *.c)
 EXEC=$(SRC:%.c=%)
