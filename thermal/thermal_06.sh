@@ -29,7 +29,7 @@ source ../include/functions.sh
 source ../include/thermal_functions.sh
 
 CPU_HEAT_BIN=../utils/heat_cpu
-GPU_HEAT_BIN=glmark2
+GPU_HEAT_BIN=/usr/bin/glmark2
 TEST_LOOP=100
 TRIP_CROSSED_COUNT=
 
@@ -49,10 +49,16 @@ check_trip_point_change() {
     local trip_type_path=0
     $CPU_HEAT_BIN &
     cpu_pid=$(ps | grep heat_cpu| awk '{print $1}')
+    test -z $cpu_pid && cpu_pid=0
     check "start cpu heat binary" "test $cpu_pid -ne 0"
 
-    $GPU_HEAT_BIN &
-    gpu_pid=$(ps | grep $GPU_HEAT_BIN| awk '{print $1}')
+    if [ -x $GPU_HEAT_BIN ]; then
+        $GPU_HEAT_BIN &
+        gpu_pid=$(ps | grep $GPU_HEAT_BIN| awk '{print $1}')
+        test -z $gpu_pid && gpu_pid=0
+    else
+        echo "glmark2 not found." 1>&2
+    fi
     check "start gpu heat binary" "test $gpu_pid -ne 0"
 
     local index=0
