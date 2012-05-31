@@ -2,7 +2,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#ifndef ANDROID
 #include <sys/timex.h>
+#else
+/* 
+* As of 4.0.4, Bionic doesn't provide the timex/adjtimex interface However, the kernel does.
+*/
+#include <linux/timex.h> /* for struct timex */
+#include <asm/unistd.h> /* for __NR_adjtimex */
+static int adjtimex(struct timex *buf)
+{
+	return syscall(__NR_adjtimex, buf);
+}
+#endif
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <sys/param.h>
