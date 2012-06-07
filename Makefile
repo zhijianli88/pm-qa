@@ -24,7 +24,6 @@
 
 all:
 	@(cd utils; $(MAKE))
-	@(cd testcases; $(MAKE) all)
 
 check:
 	@(cd utils; $(MAKE) check)
@@ -40,12 +39,11 @@ uncheck:
 	@(cd cpuhotplug; $(MAKE) uncheck)
 	@(cd cpuidle; $(MAKE) uncheck)
 	@(cd sched_mc; $(MAKE) uncheck)
-	@(cd suspend; $(MAKE) uncheck)
-	@(cd thermal; $(MAKE) uncheck)
+#	@(cd suspend; $(MAKE) uncheck)
+#	@(cd thermal; $(MAKE) uncheck)
 
 recheck: uncheck check
 
 clean:
 	@(cd utils; $(MAKE) clean)
-	@(cd testcases; $(MAKE) clean)
 
