@@ -1,3 +1,4 @@
+#!/bin/bash
 #
 # PM-QA validation test suite for the power management on Linux
 #
@@ -21,39 +22,14 @@
 #     Daniel Lezcano <daniel.lezcano@linaro.org> (IBM Corporation)
 #       - initial API and implementation
 #
-SNT=$(wildcard *sanity.sh)
-TST=$(wildcard *[^(sanity)].sh)
-LOG=$(TST:.sh=.log)
-CFLAGS?=-g -Wall -pthread
-CC?=gcc
-SRC=$(wildcard *.c)
-EXEC=$(SRC:%.c=%)
 
-check: run_tests
+source ../include/functions.sh
 
-SANITY_STATUS:= $(shell if test $(SNT) && test -f $(SNT); then \
-		./$(SNT); if test "$$?" -eq 0; then echo 0; else \
-		echo 1; fi; else echo 1; fi)
+check_sched_mc_sysfs_entry() {
 
-ifeq "$(SANITY_STATUS)" "1"
-run_tests: uncheck $(EXEC) $(LOG)
+    local filepath=$CPU_PATH/sched_mc_power_savings
 
-%.log: %.sh
-	@echo "###"
-	@echo "### $(<:.sh=):"
-	@echo -n "### "; cat $(<:.sh=.txt);
-	@echo -n "### "; grep "URL :" ./$< | awk '/http/{print $$NF}'
-	@echo "###"
-	@./$< 2> $@
-else
-run_tests: $(SNT)
-	@cat $(<:.sh=.txt)
-endif
+    test -f $filepath && return 1 || return 0
+}
 
-clean:
-	rm -f *.o $(EXEC)
-
-uncheck:
-	-@test ! -z "$(LOG)" && rm -f $(LOG)
-
-recheck: uncheck check
+check_sched_mc_sysfs_entry
