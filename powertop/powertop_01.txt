@@ -1,0 +1,1 @@
+run powertop for 2 iterations of 10sec each

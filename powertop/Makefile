@@ -18,33 +18,8 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 # Contributors:
-#     Torez Smith <torez.smith@linaro.org> (IBM Corporation)
+#     Rajagopal Venkat <rajagopal.venkat@linaro.org>
 #       - initial API and implementation
 #
 
-all:
-	@(cd utils; $(MAKE))
-
-check:
-	@(cd utils; $(MAKE) check)
-	@(cd cpufreq; $(MAKE) check)
-	@(cd cpuhotplug; $(MAKE) check)
-	@(cd cpuidle; $(MAKE) check)
-	@(cd sched_mc; $(MAKE) check)
-#	@(cd suspend; $(MAKE) check)
-#	@(cd thermal; $(MAKE) check)
-#	@(cd powertop; $(MAKE) check)
-
-uncheck:
-	@(cd cpufreq; $(MAKE) uncheck)
-	@(cd cpuhotplug; $(MAKE) uncheck)
-	@(cd cpuidle; $(MAKE) uncheck)
-	@(cd sched_mc; $(MAKE) uncheck)
-#	@(cd suspend; $(MAKE) uncheck)
-#	@(cd thermal; $(MAKE) uncheck)
-
-recheck: uncheck check
-
-clean:
-	@(cd utils; $(MAKE) clean)
-
+include ../Test.mk
