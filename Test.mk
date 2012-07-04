@@ -44,7 +44,7 @@ run_tests: uncheck $(EXEC) $(LOG)
 	@echo -n "### "; cat $(<:.sh=.txt);
 	@echo -n "### "; grep "URL :" ./$< | awk '/http/{print $$NF}'
 	@echo "###"
-	@./$< 2> $@
+	-@./$< 2> $@
 else
 run_tests: $(SNT)
 	@cat $(<:.sh=.txt)
