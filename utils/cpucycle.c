@@ -35,11 +35,11 @@
 #include <sys/time.h>
 #include <sys/resource.h>
 
-static bool intr;
+volatile sig_atomic_t intr = 0;
 
 void sigalarm(int sig)
 {
-	intr = true;
+	intr = 1;
 }
 
 int main(int argc, char *argv[])
@@ -97,10 +97,10 @@ int main(int argc, char *argv[])
 
 	/* warmup */
 	alarm(1);
-	for (counter = 0, intr = false; !intr ; counter++);
+	for (counter = 0, intr = 0; !intr ; counter++);
 
 	alarm(1);
-	for (counter = 0, intr = false; !intr ; counter++);
+	for (counter = 0, intr = 0; !intr ; counter++);
 
 	printf("%ld\n", counter);
 
