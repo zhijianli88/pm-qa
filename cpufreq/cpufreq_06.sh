@@ -106,6 +106,12 @@ if [ $(id -u) != 0 ]; then
     exit 0
 fi
 
+supported=$(cat $CPU_PATH/cpu0/cpufreq/scaling_available_governors | grep "userspace")
+if [ -z $supported ]; then
+    log_skip "userspace not supported"
+    exit 0
+fi
+
 save_governors
 save_frequencies
 

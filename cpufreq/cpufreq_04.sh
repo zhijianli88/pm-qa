@@ -51,4 +51,9 @@ if [ $(id -u) != 0 ]; then
     exit 0
 fi
 
-for_each_cpu for_each_frequency check_frequency || exit 1
+supported=$(cat $CPU_PATH/cpu0/cpufreq/scaling_available_governors | grep "userspace")
+if [ -z $supported ]; then
+    log_skip "userspace not supported"
+else
+    for_each_cpu for_each_frequency check_frequency || exit 1
+fi

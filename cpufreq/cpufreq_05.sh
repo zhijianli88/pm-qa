@@ -51,30 +51,50 @@ switch_userspace() {
     set_governor $cpu 'userspace'
 }
 
-for cpu in $(ls $CPU_PATH | grep "cpu[0-9].*"); do
-    switch_ondemand $cpu
-done
-check "'ondemand' directory exists" "test -d $CPU_PATH/cpufreq/ondemand"
+supported=$(cat $CPU_PATH/cpu0/cpufreq/scaling_available_governors | grep "ondemand")
+if [ -z $supported ]; then
+    log_skip "ondemand not supported"
+else
+    for cpu in $(ls $CPU_PATH | grep "cpu[0-9].*"); do
+        switch_ondemand $cpu
+    done
+    check "'ondemand' directory exists" "test -d $CPU_PATH/cpufreq/ondemand"
+fi
 
-for cpu in $(ls $CPU_PATH | grep "cpu[0-9].*"); do
-    switch_conservative $cpu
-done
-check "'conservative' directory exists" "test -d $CPU_PATH/cpufreq/conservative"
+supported=$(cat $CPU_PATH/cpu0/cpufreq/scaling_available_governors | grep "conservative")
+if [ -z $supported ]; then
+    log_skip "conservative not supported"
+else
+    for cpu in $(ls $CPU_PATH | grep "cpu[0-9].*"); do
+        switch_conservative $cpu
+    done
+    check "'conservative' directory exists" "test -d $CPU_PATH/cpufreq/conservative"
+fi
 
-for cpu in $(ls $CPU_PATH | grep "cpu[0-9].*"); do
-    switch_userspace $cpu
-done
+supported=$(cat $CPU_PATH/cpu0/cpufreq/scaling_available_governors | grep "userspace")
+if [ -z $supported ]; then
+    log_skip "userspace not supported"
+else
+    for cpu in $(ls $CPU_PATH | grep "cpu[0-9].*"); do
+        switch_userspace $cpu
+    done
 
-check "'ondemand' directory is not there" "test ! -d $CPU_PATH/cpufreq/ondemand"
-check "'conservative' directory is not there" "test ! -d $CPU_PATH/cpufreq/conservative"
+    check "'ondemand' directory is not there" "test ! -d $CPU_PATH/cpufreq/ondemand"
+    check "'conservative' directory is not there" "test ! -d $CPU_PATH/cpufreq/conservative"
+fi
 
 # if more than one cpu, combine governors
 nrcpus=$(ls $CPU_PATH | grep "cpu[0-9].*" | wc -l)
 if [ $nrcpus > 1 ]; then
-    switch_ondemand cpu0
-    switch_conservative cpu1
-    check "'ondemand' directory exists" "test -d $CPU_PATH/cpufreq/ondemand"
-    check "'conservative' directory exists" "test -d $CPU_PATH/cpufreq/conservative"
+    affected=$(cat $CPU_PATH/cpu0/cpufreq/affected_cpus | grep 1)
+    if [ -z $affected ]; then
+        switch_ondemand cpu0
+        switch_conservative cpu1
+        check "'ondemand' directory exists" "test -d $CPU_PATH/cpufreq/ondemand"
+        check "'conservative' directory exists" "test -d $CPU_PATH/cpufreq/conservative"
+    else
+        log_skip "combine governors not supported"
+    fi
 fi
 
 restore_governors
