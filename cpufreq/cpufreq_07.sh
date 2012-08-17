@@ -83,7 +83,7 @@ if [ $(id -u) != 0 ]; then
 fi
 
 supported=$(cat $CPU_PATH/cpu0/cpufreq/scaling_available_governors | grep "ondemand")
-if [ -z $supported ]; then
+if [ -z "$supported" ]; then
     log_skip "ondemand not supported"
     exit 0
 fi
