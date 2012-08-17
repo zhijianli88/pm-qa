@@ -1,1 +1,1 @@
-perform tests involving removing ac power
+perform a suspend to ram test via sysfs

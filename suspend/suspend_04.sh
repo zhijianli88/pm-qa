@@ -27,57 +27,48 @@
 
 
 source ../include/functions.sh
-source ../include/suspend.sh
+source ../include/suspend_functions.sh
 
-# test_power: switch on/off this test
-test_power=0
-auto=1
-args_power_sleep=60
+# test_ac: switch on/off this test
+test_ac=0
 
-if [ "$test_power" -eq 1 -a "$battery_count" -eq 0 ]; then
-	ECHO "*** no BATTERY detected power test skipped ..."
-elif [ "$test_power" -eq 1 ]; then
-	save_timer_sleep="$timer_sleep"
-	let timer_sleep="$args_power_sleep"
+if [ "$test_ac" -eq 0 ]; then
+	log_skip "suspend test involving ac power remove"
+	exit 0
+fi
 
+if [ ! -d /proc/acpi/battery/ ]; then
+	log_skip "acpi interface is not there"
+	exit 0
+fi
+
+battery_count=`battery_count`
+if [ "$battery_count" -eq 0 ]; then
+	log_skip "no BATTERY detected for ac tests"
+else
 	ac_required 0
 	phase
+	sleep 2
+	check "suspend with AC disconnected" suspend_system "mem"
 
-	# get start values
-	date_before=`date +%s`
-	bat_before=`battery_capacity`
-  
-	# Suspend
-	check "battery drain during suspend" suspend_system
- 	if [ $? -eq 0 ]; then
+	ac_required 1
+	phase
+	sleep 2
+	check "suspend with AC connected" suspend_system "mem"
+
+	ac_transitions 1 0
+	echo "*** please remove the AC cord while the machine is suspended"
+	phase
+	sleep 2
+	check "loss of AC while suspended" suspend_system "mem"
+
+	ac_transitions 0 1
+	echo "*** please insert the AC cord while the machine is suspended"
+	phase
+	sleep 2
+	check "return of AC while suspended" suspend_system "mem"
+	if [ $? -eq 0 ]; then
 		rm -f "$LOGFILE"
 	fi
-
-	# get end values
-	date_after=`date +%s`
-	bat_after=`battery_capacity`
-
-	# do the calculations 
-	let consumed="$bat_before - $bat_after"
-	let elapsed="$date_after - $date_before"
-	let usage="($consumed * 60*60) / $elapsed"
-
-	# output the results
-	ECHO "before: $bat_before mWh"
-	ECHO "after: $bat_after mWh"
-	ECHO "consumed: $consumed mW"
-	ECHO "sleep seconds: $elapsed sec"
-	ECHO "overall usage: $usage mW"
-	 
-	report_battery="$usage mW"
-
-	if [ $elapsed -lt 600 ]
-	then
-		ECHO "WARNING: the suspend was less than 10 minutes"
-		ECHO "         to get reliable numbers increase the sleep time"
-		report_battery="$report_battery (unreliable)"
-	fi
-
-	timer_sleep="$save_timer_sleep"
 fi
 

@@ -27,34 +27,24 @@
 
 
 source ../include/functions.sh
-source ../include/suspend.sh
+source ../include/suspend_functions.sh
 
-# test_ac: switch on/off this test
-test_ac=0
-auto=1
+# test_mem: switch on/off this test
+test_mem=0
 
-if [ "$test_ac" -eq 1 -a "$battery_count" -eq 0 ]; then
-	ECHO "*** no BATTERY detected ac tests skipped ..."
-elif [ "$test_ac" -eq 1 ]; then
-	ac_required 0
-	phase
-	check "suspend with AC disconnected" suspend_system
+if [ "$test_mem" -eq 0 ]; then
+	log_skip "suspend to ram via sysfs not enabled"
+	exit 0
+fi
 
-	ac_required 1
+supported=$(cat /sys/power/state | grep "mem")
+if [ -n "$supported" ]; then
 	phase
-	check "suspend with AC connected" suspend_system
-	
-	ac_transitions 1 0
-	echo "*** please remove the AC cord while the machine is suspended"
-	phase
-	check "loss of AC while suspended" suspend_system
-
-	ac_transitions 0 1
-	echo "*** please insert the AC cord while the machine is suspended"
-	phase
-	check "return of AC while suspended" suspend_system
+	check "suspend to ram via sysfs" suspend_system "mem"
 	if [ $? -eq 0 ]; then
 		rm -f "$LOGFILE"
 	fi
+else
+	log_skip "suspend to ram via sysfs not supported"
 fi
 

@@ -1,1 +1,1 @@
-perform a variable delay suspend/resume test
+perform a battery consumption test

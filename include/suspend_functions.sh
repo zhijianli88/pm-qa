@@ -32,85 +32,31 @@
 #  - this script is edited and integrated into Linaro PM-QA
 #  - hongbo.zhang@linaro.org, March, 2012
 #
-# V8:
-#  - add a new suspend battery drain test
-#  - track batteries disabling tests which require them automatically
-#  - disable dbus tests when we have no primary user
-#  - include the new power drain test in --full
-#  - handle AC transitions better
-#  - use minutes in messages where appropriate
-#  - report AC transition failures
-#  - only mention AC when we have batteries
-#  - report results at the bottom for easy posting
-#
-# V7:
-#  - add a --dry-run mode to simplify developement
-#  - add a automation mode for checkbox integration
-#  - add a new pm-suspend test
-#  - record and restore timer_delay around the variable time test.
-#
-# V6:
-#  - move an --enable/--disable interface for tests
-#  - add --set to allow setting of approved parameters
-#  - fix up prompting for interactive and non-interactive tests
-#  - supply a sensible default for testing on servers (apw, kirkland)
-#
-# V5:
-#  - send dbus messages as the original user
-#  - stop clearing the dmesg as we go
-#  - stop using trace generally as this affects the wakeups
-#  - do a single dbus test then move to pm-suspend to avoid screensaver
-#  - timeout waiting for a suspend to complete catching failure to go down
-#
-# V4:
-#  - update the help output
-#  - add --comprehensive to do AC related tests
-#  - add --extensive to do a range of time related tests
-#  - add --full to enable all harder tests
-#  - add fallback to pm-suspend for Kbuntu
-#  - collect dmesg output
-#  - remove hwclock update
-#
-# V3:
-#  - fix typo in fallback acpi interface
-#  - when recording the RTC clock do not go direct
-#  - pmi is now deprecated suspend using dbus
-#
-# V2:
-#  - support newer rtc sysfs wakealarm interface
-#  - move to using pmi action suspend
-#  - allow the user to specify the number of iterations
-#  - ensure we are running as root
-#  - report the iterations to the user
-#  - clean up the output and put it in a standard logfile
-#  - add a descriptive warning and allow user cancel
-#  - add tracing enable/disable
-#  - fix logfile location
-#  - add a failure cleanup mode
-#  - make time sleep time and delay time configurable
-#  - ensure the log directory exists
-#  - clock will be fixed automatically on network connect
-#  - default sleep before wakeup to 20s
-#  - do not use dates after we have corrupted the clock
-#  - sort out the copyright information
-#  - we do not have any failure cleanup currently
-#
-# V1:
-#  - add the suspend test scripts
-#
-P="test-suspend"
+
 
 LOGDIR='/var/lib/pm-utils'
 LOGFILE="$LOGDIR/stress.log"
+
+# Options Config
+dry=0
+auto=1
+timer_sleep=20
+
+# root is needed to fiddle with the clock and use the rtc wakeups.
+if [ $(id -u) != 0 ]; then
+	log_skip "run as non-root"
+	exit 0
+fi
+
+# Ensure the log directory exists.
+mkdir -p "$LOGDIR"
 
 setup_wakeup_timer ()
 {
 	timeout="$1"
 
-	#
 	# Request wakeup from the RTC or ACPI alarm timers.  Set the timeout
 	# at 'now' + $timeout seconds.
-	#
 	ctl='/sys/class/rtc/rtc0/wakealarm'
 	if [ -f "$ctl" ]; then
 		# Cancel any outstanding timers.
@@ -141,19 +87,25 @@ suspend_system ()
 
 	dmesg >"$LOGFILE.dmesg.A"
 
-	# Send a dbus message to initiate Suspend.
-	if [ "$suspend_dbus" -eq 1 ]; then
-		sudo -u $SUDO_USER dbus-send --session --type=method_call \
+	# Initiate suspend in different ways.
+	case "$1" in
+		dbus)
+			dbus-send --session --type=method_call \
 			--dest=org.freedesktop.PowerManagement \
 			/org/freedesktop/PowerManagement \
 			org.freedesktop.PowerManagement.Suspend \
 			>> "$LOGFILE" || {
-				ECHO "$P FAILED: dbus suspend failed" 1>&2
+				ECHO "FAILED: dbus suspend failed" 1>&2
 				return 1
 			}
-	else
-		pm-suspend >> "$LOGFILE"
-	fi
+		;;
+		pmsuspend)
+			pm-suspend >> "$LOGFILE"
+		;;
+		mem)
+			echo "mem" > /sys/power/state
+		;;
+	esac
 
 	# Wait on the machine coming back up -- pulling the dmesg over.
 	echo "v---" >>"$LOGFILE"
@@ -179,31 +131,15 @@ suspend_system ()
 	echo "^---" >>"$LOGFILE"
 	rm -f "$LOGFILE.dmesg"*
 	if [ "$retry" -eq 0 ]; then
-		ECHO "$P SUSPEND FAILED, did not go to sleep" 1>&2
+		ECHO "SUSPEND FAILED, did not go to sleep" 1>&2
 		return 1
 	fi
-}
-
-delay_system ()
-{
-	if [ "$dry" -eq 1 ]; then
-		echo "DRY-RUN: stay awake for $timer_delay"
-		sleep 1
-		return
-	fi
-
-	#
-	# wait for $timer_delay seconds after system resume from S3
-	#
-	ECHO "wait for $timer_delay seconds..."
-	sleep $timer_delay
 }
 
 ECHO ()
 {
 	echo "$@" | tee -a "$LOGFILE"
 }
-
 
 enable_trace()
 {
@@ -215,7 +151,6 @@ disable_trace()
     echo 0 > '/sys/power/pm_trace'
 }
 
-# Battery
 battery_count()
 {
 	cat /proc/acpi/battery/*/state 2>/dev/null | \
@@ -225,6 +160,7 @@ battery_count()
 		END			{ print total }
 	'
 }
+
 battery_capacity()
 {
 	cat /proc/acpi/battery/*/state 2>/dev/null | \
@@ -235,74 +171,10 @@ battery_capacity()
 	'
 }
 
-
-# Options helpers.
-chk_test ()
-{
-	if ! declare -p "test_$1" 2>/dev/null 1>&2; then
-		echo "$P: $1: test unknown" 1>&2
-		exit 1
-	fi
-}
-handle_set ()
-{
-	stmt=`echo "$1" | sed -e 's/\./_/g'`
-
-	test="${stmt%%_*}"
-	var="${stmt%%=*}"
-
-	chk_test "$test"
-	if ! declare -p "args_$var" 2>/dev/null 1>&2; then
-		echo "$P: $var: test variable unknown" 1>&2
-		exit 1
-	fi
-	
-	RET="args_$stmt"
-}
-chk_number() {
-	eval "val=\"\$$1\""
-	let num="0+$val"
-	if [ "$val" != "$num" ]; then
-		name=`echo "$1" | sed -e 's/args_//' -e 's/_/./'`
-		echo "$P: $name: $val: non-numeric value" 1>&2
-		exit 1
-	fi
-}
-
-# Options handling.
-dry=0
-auto=0
-timer_sleep=20
-timer_delay=10
-
-test_dbus=0
-test_pmsuspend=0
-test_ac=0
-test_timed=0
-test_repeat=0
-args_repeat_iterations=10
-test_power=0
-args_power_sleep=600
-
-chk_number "args_repeat_iterations"
-chk_number "args_power_sleep"
-
-battery_count=`battery_count`
-
-suspend_dbus=0
-
-# Check we are running as root as we are going to fiddle with the clock
-# and use the rtc wakeups.
-id=`id -u`
-if [ "$id" -ne 0 ]; then
-	echo "ERROR: must be run as root to perform this test, use sudo:" 1>&2
-	echo "       sudo $0 $@" 1>&2
-	exit 1
-fi
-
 ac_needed=-1
 ac_is=-1
 ac_becomes=-1
+
 ac_required()
 {
 	ac_check
@@ -310,6 +182,7 @@ ac_required()
 	ac_needed="$1"
 	ac_becomes="$1"
 }
+
 ac_transitions()
 {
 	ac_check
@@ -317,6 +190,7 @@ ac_transitions()
 	ac_needed="$1"
 	ac_becomes="$2"
 }
+
 ac_online()
 {
 	cat /proc/acpi/ac_adapter/*/state 2>/dev/null | \
@@ -335,6 +209,7 @@ ac_online()
 					}
 	'
 }
+
 ac_check()
 {
 	typeset ac_current=`ac_online`
@@ -350,13 +225,14 @@ ac_check()
 phase=0
 phase_first=1
 phase_interactive=1
+
 phase()
 {
 	typeset sleep
 
 	let phase="$phase+1"
 
-	if [ "$battery_count" -ne 0 -a "$ac_needed" -ne "$ac_is" ]; then
+	if [ "$ac_needed" -ne "$ac_is" ]; then
 		case "$ac_needed" in
 		0) echo "*** please ensure your AC cord is detached" ;;
 		1) echo "*** please ensure your AC cord is attached" ;;
@@ -386,7 +262,4 @@ phase()
 		read x
 	fi
 }
-
-# Ensure the log directory exists.
-mkdir -p "$LOGDIR"
 

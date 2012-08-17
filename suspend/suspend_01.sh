@@ -27,23 +27,23 @@
 
 
 source ../include/functions.sh
-source ../include/suspend.sh
+source ../include/suspend_functions.sh
 
 # test_dbus: switch on/off this test
-test_dbus=1
-auto=1
+test_dbus=0
 
-if [ "$test_dbus" -eq 1 -a \
-		\( "$SUDO_USER" = "" -o "$SUDO_USER" = "root" \) ]; then
-	ECHO "*** no primary user (via sudo) dbus tests skipped ..."
-elif [ "$test_dbus" -eq 1 ]; then
-	ac_required 1
-	suspend_dbus=1
+if [ "$test_dbus" -eq 0 ]; then
+	log_skip "dbus message suspend test not enabled"
+	exit 0
+fi
+
+if [ -x /usr/bin/dbus-send ]; then
 	phase
-	check "suspend via dbus message" suspend_system 
+	check "suspend by dbus message" suspend_system "dbus"
 	if [ $? -eq 0 ]; then
 		rm -f "$LOGFILE"
 	fi
-	suspend_dbus=0
+else
+	log_skip "dbus-send command not exist"
 fi
 

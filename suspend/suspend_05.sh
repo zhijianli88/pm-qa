@@ -27,28 +27,67 @@
 
 
 source ../include/functions.sh
-source ../include/suspend.sh
+source ../include/suspend_functions.sh
 
-# test_timed: switch on/off this test
-test_timed=1
-auto=1
+# test_power: switch on/off this test
+test_power=0
+args_power_sleep=60
 
-if [ "$test_timed" -eq 1 ]; then
-	save_timer_delay="$timer_delay"
-	timer_delay=20
-	sus_number=0
+if [ "$test_power" -eq 0 ]; then
+	log_skip "battery consumption test while suspend"
+	exit 0
+fi
 
-	ac_required 1
+if [ ! -d /proc/acpi/battery/ ]; then
+	log_skip "acpi interface is not there"
+	exit 0
+fi
+
+battery_count=`battery_count`
+if [ "$battery_count" -eq 0 ]; then
+	log_skip "no BATTERY detected for power test"
+else
+	save_timer_sleep="$timer_sleep"
+	let timer_sleep="$args_power_sleep"
+
+	ac_required 0
 	phase
-	while [ "$timer_delay" -gt 0 ]; do
-		check "iteration variable delay suspend/resume" suspend_system
-		delay_system
-		let timer_delay="$timer_delay - 5"
-		let sus_number="sus_number + 1"
-	done
-	if [ $? -eq 0 ]; then
+
+	# get start values
+	date_before=`date +%s`
+	bat_before=`battery_capacity`
+
+	# Suspend
+	check "battery drain during suspend" suspend_system "mem"
+ 	if [ $? -eq 0 ]; then
 		rm -f "$LOGFILE"
 	fi
-	timer_delay="$save_timer_delay"
+
+	# get end values
+	date_after=`date +%s`
+	bat_after=`battery_capacity`
+
+	# do the calculations 
+	let consumed="$bat_before - $bat_after"
+	let elapsed="$date_after - $date_before"
+	let usage="($consumed * 60*60) / $elapsed"
+
+	# output the results
+	ECHO "before: $bat_before mWh"
+	ECHO "after: $bat_after mWh"
+	ECHO "consumed: $consumed mW"
+	ECHO "sleep seconds: $elapsed sec"
+	ECHO "overall usage: $usage mW"
+
+	report_battery="$usage mW"
+
+	if [ $elapsed -lt 600 ]
+	then
+		ECHO "WARNING: the suspend was less than 10 minutes"
+		ECHO "         to get reliable numbers increase the sleep time"
+		report_battery="$report_battery (unreliable)"
+	fi
+
+	timer_sleep="$save_timer_sleep"
 fi
 

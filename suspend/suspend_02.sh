@@ -27,18 +27,23 @@
 
 
 source ../include/functions.sh
-source ../include/suspend.sh
+source ../include/suspend_functions.sh
 
 # test_pmsuspend: switch on/off this test
 test_pmsuspend=1
-auto=1
 
-if [ "$test_pmsuspend" -eq 1 ]; then
-	ac_required 1
+if [ "$test_pmsuspend" -eq 0 ]; then
+	log_skip "pm-suspend test not enabled"
+	exit 0
+fi
+
+if [ -x /usr/sbin/pm-suspend ]; then
 	phase
-	check "suspend via pm-suspend" suspend_system
+	check "suspend via pm-suspend" suspend_system "pmsuspend"
 	if [ $? -eq 0 ]; then
 		rm -f "$LOGFILE"
 	fi
+else
+	log_skip "pm-suspend command not exist"
 fi
 
