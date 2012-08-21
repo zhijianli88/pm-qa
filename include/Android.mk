@@ -14,5 +14,5 @@ define $(module_name)_etc_add_executable
     include $(BUILD_PREBUILT)
 endef
 
-test_names := functions suspend thermal_functions
+test_names := functions suspend_functions thermal_functions
 $(foreach item,$(test_names),$(eval $(call $(module_name)_etc_add_executable, $(item))))
