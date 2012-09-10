@@ -59,8 +59,8 @@ else
 
 	# Suspend
 	check "battery drain during suspend" suspend_system "mem"
- 	if [ $? -eq 0 ]; then
-		rm -f "$LOGFILE"
+ 	if [ $? -ne 0 ]; then
+		cat "$LOGFILE" 1>&2
 	fi
 
 	# get end values
@@ -91,3 +91,5 @@ else
 	timer_sleep="$save_timer_sleep"
 fi
 
+restore_trace
+rm -f "$LOGFILE"

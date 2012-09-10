@@ -67,8 +67,10 @@ else
 	phase
 	sleep 2
 	check "return of AC while suspended" suspend_system "mem"
-	if [ $? -eq 0 ]; then
-		rm -f "$LOGFILE"
+	if [ $? -ne 0 ]; then
+		cat "$LOGFILE" 1>&2
 	fi
 fi
 
+restore_trace
+rm -f "$LOGFILE"

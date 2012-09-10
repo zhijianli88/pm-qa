@@ -30,7 +30,7 @@ source ../include/functions.sh
 source ../include/suspend_functions.sh
 
 # test_dbus: switch on/off this test
-test_dbus=0
+test_dbus=1
 
 if [ "$test_dbus" -eq 0 ]; then
 	log_skip "dbus message suspend test not enabled"
@@ -40,10 +40,12 @@ fi
 if [ -x /usr/bin/dbus-send ]; then
 	phase
 	check "suspend by dbus message" suspend_system "dbus"
-	if [ $? -eq 0 ]; then
-		rm -f "$LOGFILE"
+	if [ $? -ne 0 ]; then
+		cat "$LOGFILE" 1>&2
 	fi
 else
 	log_skip "dbus-send command not exist"
 fi
 
+restore_trace
+rm -f "$LOGFILE"

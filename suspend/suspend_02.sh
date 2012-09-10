@@ -40,10 +40,13 @@ fi
 if [ -x /usr/sbin/pm-suspend ]; then
 	phase
 	check "suspend via pm-suspend" suspend_system "pmsuspend"
-	if [ $? -eq 0 ]; then
-		rm -f "$LOGFILE"
+	if [ $? -ne 0 ]; then
+		cat "$LOGFILE" 1>&2
 	fi
 else
 	log_skip "pm-suspend command not exist"
 fi
+
+restore_trace
+rm -f "$LOGFILE"
 

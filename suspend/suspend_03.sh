@@ -30,7 +30,7 @@ source ../include/functions.sh
 source ../include/suspend_functions.sh
 
 # test_mem: switch on/off this test
-test_mem=0
+test_mem=1
 
 if [ "$test_mem" -eq 0 ]; then
 	log_skip "suspend to ram via sysfs not enabled"
@@ -41,10 +41,12 @@ supported=$(cat /sys/power/state | grep "mem")
 if [ -n "$supported" ]; then
 	phase
 	check "suspend to ram via sysfs" suspend_system "mem"
-	if [ $? -eq 0 ]; then
-		rm -f "$LOGFILE"
+	if [ $? -ne 0 ]; then
+		cat "$LOGFILE" 1>&2
 	fi
 else
 	log_skip "suspend to ram via sysfs not supported"
 fi
 
+restore_trace
+rm -f "$LOGFILE"

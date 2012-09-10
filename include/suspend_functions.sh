@@ -40,6 +40,7 @@ LOGFILE="$LOGDIR/stress.log"
 # Options Config
 dry=0
 auto=1
+pm_trace=1
 timer_sleep=20
 
 # root is needed to fiddle with the clock and use the rtc wakeups.
@@ -103,7 +104,7 @@ suspend_system ()
 			pm-suspend >> "$LOGFILE"
 		;;
 		mem)
-			echo "mem" > /sys/power/state
+			`echo "mem" > /sys/power/state` >> "$LOGFILE"
 		;;
 	esac
 
@@ -143,12 +144,32 @@ ECHO ()
 
 enable_trace()
 {
-    echo 1 > '/sys/power/pm_trace'
+	if [ -w /sys/power/pm_trace ]; then
+		echo 1 > '/sys/power/pm_trace'
+	fi
 }
 
 disable_trace()
 {
-    echo 0 > '/sys/power/pm_trace'
+	if [ -w /sys/power/pm_trace ]; then
+		echo 0 > '/sys/power/pm_trace'
+	fi
+}
+
+trace_state=-1
+
+save_trace()
+{
+	if [ -r /sys/power/pm_trace ]; then
+		trace_state=`cat /sys/power/pm_trace`
+	fi
+}
+
+restore_trace()
+{
+	if [ "$trace_state" -ne -1 -a -w /sys/power/pm_trace ]; then
+		echo "$trace_state" > '/sys/power/pm_trace'
+	fi
 }
 
 battery_count()
@@ -262,4 +283,12 @@ phase()
 		read x
 	fi
 }
+
+save_trace
+
+if [ "$pm_trace" -eq 1 ]; then
+	enable_trace
+else
+	disable_trace
+fi
 
