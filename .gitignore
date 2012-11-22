@@ -1,7 +1,9 @@
 .pc
 *.log
+*.patch
 utils/cpuburn
 utils/cpucycle
+utils/heat_cpu
 utils/nanosleep
 cpuidle/cpuidle_killer
 patches
