@@ -30,14 +30,23 @@ source ../include/thermal_functions.sh
 
 CPU_HEAT_BIN=../utils/heat_cpu
 GPU_HEAT_BIN=/usr/bin/glmark2
+cpu_pid=0
+gpu_pid=0
+
+heater_kill() {
+    if [ $cpu_pid != 0 ]; then
+	kill -9 $cpu_pid
+    fi
+    if [ $gpu_pid != 0 ]; then
+	kill -9 $gpu_pid
+    fi
+}
 
 check_temperature_change() {
     local dirpath=$THERMAL_PATH/$1
     local zone_name=$1
     shift 1
 
-    local cpu_pid=0
-    local gpu_pid=0
     local init_temp=$(cat $dirpath/temp)
     $CPU_HEAT_BIN &
     cpu_pid=$(ps | grep heat_cpu| awk '{print $1}')
@@ -55,13 +64,10 @@ check_temperature_change() {
 
     sleep 5
     local final_temp=$(cat $dirpath/temp)
-    if [ $cpu_pid != 0 ]; then
-	kill -9 $cpu_pid
-    fi
-    if [ $gpu_pid != 0 ]; then
-	kill -9 $gpu_pid
-    fi
+    heater_kill
     check "temperature variation with load" "test $final_temp -gt $init_temp"
 }
+
+trap "heater_kill; sigtrap" SIGHUP SIGINT SIGTERM
 
 for_each_thermal_zone check_temperature_change

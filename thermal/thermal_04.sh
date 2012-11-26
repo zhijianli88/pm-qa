@@ -28,6 +28,13 @@
 source ../include/functions.sh
 source ../include/thermal_functions.sh
 HEAT_CPU_MODERATE=../utils/heat_cpu
+pid=0
+
+heater_kill() {
+    if [ $pid != 0 ]; then
+	kill -9 $pid
+    fi
+}
 
 verify_cooling_device_temp_change() {
     local dirpath=$THERMAL_PATH/$1
@@ -65,9 +72,11 @@ verify_cooling_device_temp_change() {
 					"test $cool_temp -ge 0"
 	count=$((count+1))
     done
-    kill -9 $pid
+    heater_kill
     echo $prev_mode_val > $tzonepath/mode
     echo $prev_state_val > $dirpath/cur_state
 }
+
+trap "heater_kill; sigtrap" SIGHUP SIGINT SIGTERM
 
 for_each_cooling_device verify_cooling_device_temp_change

@@ -32,6 +32,17 @@ CPU_HEAT_BIN=../utils/heat_cpu
 GPU_HEAT_BIN=/usr/bin/glmark2
 TEST_LOOP=100
 TRIP_CROSSED_COUNT=
+cpu_pid=0
+gpu_pid=0
+
+heater_kill() {
+    if [ $cpu_pid != 0 ]; then
+	kill -9 $cpu_pid
+    fi
+    if [ $gpu_pid != 0 ]; then
+	kill -9 $gpu_pid
+    fi
+}
 
 check_trip_point_change() {
     local dirpath=$THERMAL_PATH/$1
@@ -43,8 +54,6 @@ check_trip_point_change() {
     local trip_temp=0
     local trip_cross=
     local trip_id=
-    local cpu_pid=0
-    local gpu_pid=0
     local trip_type=0
     local trip_type_path=0
     $CPU_HEAT_BIN &
@@ -94,12 +103,9 @@ check_trip_point_change() {
 	index=$((index + 1))
     done
 
-    if [ $cpu_pid != 0 ]; then
-	kill -9 $cpu_pid
-    fi
-    if [ $gpu_pid != 0 ]; then
-	kill -9 $gpu_pid
-    fi
+    heater_kill
 }
+
+trap "heater_kill; sigtrap" SIGHUP SIGINT SIGTERM
 
 for_each_thermal_zone check_trip_point_change
