@@ -31,7 +31,6 @@ source ../include/thermal_functions.sh
 CPU_HEAT_BIN=../utils/heat_cpu
 GPU_HEAT_BIN=/usr/bin/glmark2
 TEST_LOOP=100
-TRIP_CROSSED_COUNT=
 cpu_pid=0
 gpu_pid=0
 
