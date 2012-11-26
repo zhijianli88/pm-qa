@@ -32,7 +32,7 @@ check:
 	@(cd cpuidle; $(MAKE) check)
 	@(cd sched_mc; $(MAKE) check)
 #	@(cd suspend; $(MAKE) check)
-#	@(cd thermal; $(MAKE) check)
+	@(cd thermal; $(MAKE) check)
 #	@(cd powertop; $(MAKE) check)
 
 uncheck:
@@ -41,7 +41,7 @@ uncheck:
 	@(cd cpuidle; $(MAKE) uncheck)
 	@(cd sched_mc; $(MAKE) uncheck)
 #	@(cd suspend; $(MAKE) uncheck)
-#	@(cd thermal; $(MAKE) uncheck)
+	@(cd thermal; $(MAKE) uncheck)
 
 recheck: uncheck check
 
