@@ -65,10 +65,10 @@ check_trip_point_change() {
         $GPU_HEAT_BIN &
         gpu_pid=$(ps | grep $GPU_HEAT_BIN| awk '{print $1}')
         test -z $gpu_pid && gpu_pid=0
+        check "start gpu heat binary" "test $gpu_pid -ne 0"
     else
         echo "glmark2 not found." 1>&2
     fi
-    check "start gpu heat binary" "test $gpu_pid -ne 0"
 
     local index=0
     for trip in $(ls $dirpath | grep "trip_point_['$MAX_ZONE']_temp"); do

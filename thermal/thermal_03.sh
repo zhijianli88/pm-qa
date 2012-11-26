@@ -57,10 +57,10 @@ check_temperature_change() {
         $GPU_HEAT_BIN &
         gpu_pid=$(ps | grep $GPU_HEAT_BIN| awk '{print $1}')
         test -z $gpu_pid && gpu_pid=0
+        check "start gpu heat binary" "test $gpu_pid -ne 0"
     else
         echo "glmark2 not found." 1>&2
     fi
-    check "start gpu heat binary" "test $gpu_pid -ne 0"
 
     sleep 5
     local final_temp=$(cat $dirpath/temp)
