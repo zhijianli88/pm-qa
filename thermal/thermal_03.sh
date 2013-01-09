@@ -29,17 +29,13 @@ source ../include/functions.sh
 source ../include/thermal_functions.sh
 
 CPU_HEAT_BIN=../utils/heat_cpu
-GPU_HEAT_BIN=/usr/bin/glmark2
 cpu_pid=0
-gpu_pid=0
 
 heater_kill() {
     if [ $cpu_pid != 0 ]; then
 	kill -9 $cpu_pid
     fi
-    if [ $gpu_pid != 0 ]; then
-	kill -9 $gpu_pid
-    fi
+    kill_glmark2
 }
 
 check_temperature_change() {
@@ -53,14 +49,7 @@ check_temperature_change() {
     test -z $cpu_pid && cpu_pid=0
     check "start cpu heat binary" "test $cpu_pid -ne 0"
 
-    if [ -x $GPU_HEAT_BIN ]; then
-        $GPU_HEAT_BIN &
-        gpu_pid=$(ps | grep $GPU_HEAT_BIN| awk '{print $1}')
-        test -z $gpu_pid && gpu_pid=0
-        check "start gpu heat binary" "test $gpu_pid -ne 0"
-    else
-        echo "glmark2 not found." 1>&2
-    fi
+    start_glmark2
 
     sleep 5
     local final_temp=$(cat $dirpath/temp)

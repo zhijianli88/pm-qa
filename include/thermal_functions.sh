@@ -238,3 +238,34 @@ enable_all_thermal_zones() {
     done
     return 0
 }
+
+GPU_HEAT_BIN=/usr/bin/glmark2
+gpu_pid=0
+
+start_glmark2() {
+    if [ -x $GPU_HEAT_BIN ]; then
+        $GPU_HEAT_BIN &
+        gpu_pid=$(pidof $GPU_HEAT_BIN)
+        # Starting X application from serial console needs this
+        if [ -z "$gpu_pid" ]; then
+            cp /etc/lightdm/lightdm.conf /etc/lightdm/lightdm.conf.bk
+            echo "autologin-user=root" >> /etc/lightdm/lightdm.conf
+            export DISPLAY=localhost:0.0
+            restart lightdm
+            sleep 5
+            mv /etc/lightdm/lightdm.conf.bk /etc/lightdm/lightdm.conf
+            $GPU_HEAT_BIN &
+            gpu_pid=$(pidof $GPU_HEAT_BIN)
+        fi
+        test -z "$gpu_pid" && cpu_pid=0
+        echo "start gpu heat binary $gpu_pid"
+    else
+        echo "glmark2 not found." 1>&2
+    fi
+}
+
+kill_glmark2() {
+    if [ "$gpu_pid" != 0 ]; then
+	kill -9 $gpu_pid
+    fi
+}
