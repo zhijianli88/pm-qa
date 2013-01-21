@@ -243,6 +243,11 @@ GPU_HEAT_BIN=/usr/bin/glmark2
 gpu_pid=0
 
 start_glmark2() {
+    if [ -n "$ANDROID" ]; then
+        am start org.linaro.glmark2/.Glmark2Activity
+        return
+    fi
+
     if [ -x $GPU_HEAT_BIN ]; then
         $GPU_HEAT_BIN &
         gpu_pid=$(pidof $GPU_HEAT_BIN)
@@ -265,6 +270,11 @@ start_glmark2() {
 }
 
 kill_glmark2() {
+    if [ -n "$ANDROID" ]; then
+        am kill org.linaro.glmark2
+        return
+    fi
+
     if [ "$gpu_pid" != 0 ]; then
 	kill -9 $gpu_pid
     fi
