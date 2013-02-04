@@ -29,10 +29,7 @@
 source ../include/functions.sh
 source ../include/suspend_functions.sh
 
-# test_pmsuspend: switch on/off this test
-test_pmsuspend=1
-
-if [ "$test_pmsuspend" -eq 0 ]; then
+if [ "$suspend_pmsuspend" -eq 0 ]; then
 	log_skip "pm-suspend test not enabled"
 	exit 0
 fi

@@ -29,10 +29,7 @@
 source ../include/functions.sh
 source ../include/suspend_functions.sh
 
-# test_ac: switch on/off this test
-test_ac=0
-
-if [ "$test_ac" -eq 0 ]; then
+if [ "$suspend_ac" -eq 0 ]; then
 	log_skip "suspend test involving ac power remove"
 	exit 0
 fi

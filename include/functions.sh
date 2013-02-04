@@ -23,6 +23,8 @@
 #       - initial API and implementation
 #
 
+source ../Switches
+
 CPU_PATH="/sys/devices/system/cpu"
 TEST_NAME=$(basename ${0%.sh})
 PREFIX=$TEST_NAME

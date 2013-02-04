@@ -28,9 +28,7 @@
 source ../include/functions.sh
 source ../include/thermal_functions.sh
 
-# test_switch: switch on/off this test
-test_switch=0
-if [ "$test_switch" -eq 0 ]; then
+if [ "$thermal_try_max" -eq 0 ]; then
     log_skip "test of trip points being crossed"
     exit 0
 fi

@@ -29,10 +29,7 @@
 source ../include/functions.sh
 source ../include/suspend_functions.sh
 
-# test_mem: switch on/off this test
-test_mem=1
-
-if [ "$test_mem" -eq 0 ]; then
+if [ "$suspend_mem" -eq 0 ]; then
 	log_skip "suspend to ram via sysfs not enabled"
 	exit 0
 fi

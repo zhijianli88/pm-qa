@@ -29,11 +29,9 @@
 source ../include/functions.sh
 source ../include/suspend_functions.sh
 
-# test_power: switch on/off this test
-test_power=0
 args_power_sleep=60
 
-if [ "$test_power" -eq 0 ]; then
+if [ "$suspend_power" -eq 0 ]; then
 	log_skip "battery consumption test while suspend"
 	exit 0
 fi

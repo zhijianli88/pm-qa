@@ -29,10 +29,7 @@
 source ../include/functions.sh
 source ../include/suspend_functions.sh
 
-# test_dbus: switch on/off this test
-test_dbus=1
-
-if [ "$test_dbus" -eq 0 ]; then
+if [ "$suspend_dbus" -eq 0 ]; then
 	log_skip "dbus message suspend test not enabled"
 	exit 0
 fi
