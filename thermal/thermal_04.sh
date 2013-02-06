@@ -58,6 +58,7 @@ verify_cooling_device_temp_change() {
     local cool_temp=0
     ./$HEAT_CPU_MODERATE moderate &
     pid=$!
+    test $pid -eq 0 && return
 
     while (test $count -le $max_state); do
 	echo 0 > $dirpath/cur_state

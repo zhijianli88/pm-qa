@@ -60,6 +60,7 @@ check_trip_point_change() {
     cpu_pid=$(ps | grep heat_cpu| awk '{print $1}')
     test -z $cpu_pid && cpu_pid=0
     check "start cpu heat binary" "test $cpu_pid -ne 0"
+    test $cpu_pid -eq 0 && return
 
     start_glmark2
 
