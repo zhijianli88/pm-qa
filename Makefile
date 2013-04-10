@@ -33,6 +33,7 @@ check:
 #	@(cd suspend; $(MAKE) check)
 	@(cd thermal; $(MAKE) check)
 #	@(cd powertop; $(MAKE) check)
+	@(cd cputopology; $(MAKE) check)
 
 uncheck:
 	@(cd cpufreq; $(MAKE) uncheck)

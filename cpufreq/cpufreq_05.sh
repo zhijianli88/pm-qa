@@ -98,3 +98,4 @@ if [ $nrcpus > 1 ]; then
 fi
 
 restore_governors
+test_status_show

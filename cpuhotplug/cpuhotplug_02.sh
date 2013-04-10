@@ -58,3 +58,4 @@ check_state() {
 }
 
 for_each_cpu check_state
+test_status_show

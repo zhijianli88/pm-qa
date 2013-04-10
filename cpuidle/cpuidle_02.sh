@@ -35,3 +35,4 @@ if [ $(id -u) != 0 ]; then
 fi
 
 check "cpuidle program runs successfully (120 secs)" "./$CPUIDLE_KILLER"
+test_status_show

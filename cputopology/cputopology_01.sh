@@ -23,7 +23,7 @@
 #       - initial API and implementation
 #
 
-# URL : https://wiki.linaro.org/WorkingGroups/PowerManagement/Doc/QA/Scripts#sched_mc_02
+# URL : https://wiki.linaro.org/WorkingGroups/PowerManagement/Doc/QA/Scripts#cputopology_01
 
 source ../include/functions.sh
 
@@ -36,3 +36,4 @@ check_physical_package_id() {
 }
 
 for_each_cpu check_physical_package_id || exit 1
+test_status_show

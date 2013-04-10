@@ -63,3 +63,4 @@ check_cooling_device_states() {
 for_each_cooling_device check_cooling_device_attributes
 
 for_each_cooling_device check_cooling_device_states
+test_status_show

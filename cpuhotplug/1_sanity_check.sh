@@ -37,3 +37,4 @@ sanity_check() {
 }
 
 check "all cpu are online" "sanity_check"
+test_status_show

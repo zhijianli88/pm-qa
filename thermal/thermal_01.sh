@@ -83,3 +83,4 @@ for_each_thermal_zone check_thermal_zone_mode
 check_thermal_zone_trip_level
 
 check_thermal_zone_bindings
+test_status_show

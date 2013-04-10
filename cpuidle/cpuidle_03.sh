@@ -58,3 +58,4 @@ trap "restore_cpus; sigtrap" SIGHUP SIGINT SIGTERM
 
 for_each_cpu check_cpuidle_kill
 restore_cpus
+test_status_show

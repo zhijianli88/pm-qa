@@ -81,3 +81,4 @@ verify_cooling_device_temp_change() {
 trap "heater_kill; sigtrap" SIGHUP SIGINT SIGTERM
 
 for_each_cooling_device verify_cooling_device_temp_change
+test_status_show

@@ -45,5 +45,6 @@ else
 fi
 
 restore_trace
+test_status_show
 rm -f "$LOGFILE"
 

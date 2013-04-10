@@ -57,3 +57,4 @@ if [ -z "$supported" ]; then
 else
     for_each_cpu for_each_frequency check_frequency || exit 1
 fi
+test_status_show

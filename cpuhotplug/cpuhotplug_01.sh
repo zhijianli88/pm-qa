@@ -34,3 +34,4 @@ for i in $FILES; do
 done
 
 for_each_cpu check_cpuhotplug_files online
+test_status_show

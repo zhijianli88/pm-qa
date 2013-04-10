@@ -58,3 +58,4 @@ check_cpuidle_files() {
 check_cpuidle_files
 
 for_each_cpu check_cpuidle_state_files
+test_status_show

@@ -33,3 +33,4 @@ check_cpuidle_sysfs_entry() {
 }
 
 check_cpuidle_sysfs_entry
+test_status_show

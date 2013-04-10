@@ -49,3 +49,4 @@ if [ $(id -u) != 0 ]; then
 fi
 
 for_each_cpu for_each_governor check_governor || exit 1
+test_status_show

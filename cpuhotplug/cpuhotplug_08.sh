@@ -47,3 +47,4 @@ random_stress() {
 }
 
 for i in $(seq 1 50); do random_stress || break; done
+test_status_show

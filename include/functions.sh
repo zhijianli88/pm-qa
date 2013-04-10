@@ -30,6 +30,17 @@ TEST_NAME=$(basename ${0%.sh})
 PREFIX=$TEST_NAME
 INC=0
 CPU=
+pass_count=0
+fail_count=0
+
+test_status_show() {
+    echo "-------- total = $(($pass_count + $fail_count))"
+    echo "-------- pass = $pass_count"
+    # report failure only if it is there
+    if [ $fail_count -ne 0 ] ; then
+      echo "-------- fail = $fail_count"
+    fi
+}
 
 log_begin() {
     printf "%-76s" "$TEST_NAME.$INC$CPU: $@... "
@@ -216,11 +227,13 @@ check() {
 
     $func $@
     if [ $? != 0 ]; then
-	log_end "fail"
+	log_end "Err"
+	fail_count=$(($fail_count + 1))
 	return 1
     fi
 
-    log_end "pass"
+    log_end "Ok"
+    pass_count=$(($pass_count + 1))
 
     return 0
 }

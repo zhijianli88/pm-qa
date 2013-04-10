@@ -64,3 +64,4 @@ check_notification() {
 }
 
 for_each_cpu check_notification
+test_status_show

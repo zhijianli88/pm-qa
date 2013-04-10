@@ -47,3 +47,4 @@ check_procinfo() {
 }
 
 for_each_cpu check_procinfo
+test_status_show

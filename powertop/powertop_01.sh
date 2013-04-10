@@ -56,3 +56,4 @@ run_powertop() {
 }
 
 run_powertop
+test_status_show

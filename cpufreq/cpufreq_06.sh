@@ -121,3 +121,4 @@ for_each_cpu check_deviation
 
 restore_frequencies
 restore_governors
+test_status_show

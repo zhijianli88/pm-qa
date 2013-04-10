@@ -69,3 +69,4 @@ check_task_migrate() {
 }
 
 for_each_cpu check_task_migrate
+test_status_show

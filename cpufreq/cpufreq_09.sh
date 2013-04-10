@@ -78,3 +78,4 @@ trap "restore_governors; sigtrap" SIGHUP SIGINT SIGTERM
 for_each_cpu check_powersave
 
 restore_governors
+test_status_show

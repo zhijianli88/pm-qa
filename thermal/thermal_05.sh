@@ -72,3 +72,4 @@ verify_cpufreq_cooling_device_action() {
     echo $prev_state_val > $dirpath/cur_state
 }
 for_each_cooling_device verify_cpufreq_cooling_device_action
+test_status_show

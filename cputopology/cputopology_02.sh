@@ -23,7 +23,7 @@
 #       - initial API and implementation
 #
 
-# URL : https://wiki.linaro.org/WorkingGroups/PowerManagement/Doc/QA/Scripts#sched_mc_03
+# URL : https://wiki.linaro.org/WorkingGroups/PowerManagement/Doc/QA/Scripts#cputopology_02
 
 source ../include/functions.sh
 
@@ -31,3 +31,4 @@ FILES="core_id core_siblings core_siblings_list physical_package_id \
 thread_siblings thread_siblings_list"
 
 for_each_cpu check_topology_files $FILES
+test_status_show

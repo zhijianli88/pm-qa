@@ -49,3 +49,4 @@ check_affinity_fails() {
 }
 
 for_each_cpu check_affinity_fails
+test_status_show
