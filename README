@@ -10,3 +10,9 @@ If you want to run a subset of the tests, do:
 
 	make -C sched_mc check
 	make -C cpufreq check
+
+For running cpuidle-stats test, which is 4th subtest in cpuidle; run:
+
+	make -C cpuidle check TEST=4
+
+Note: Any other value for TEST will not run any other subtest
