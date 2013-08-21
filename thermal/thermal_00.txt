@@ -1,0 +1,1 @@
+list existing thermal-zones and cooling-devices in the system
