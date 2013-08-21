@@ -23,7 +23,7 @@
 #       - initial API and implementation
 #
 
-# URL : https://wiki.linaro.org/WorkingGroups/PowerManagement/Doc/QA/Scripts#suspend_04
+# URL : https://wiki.linaro.org/WorkingGroups/PowerManagement/Resources/TestSuite/PmQaSpecification#suspend_04
 
 
 source ../include/functions.sh

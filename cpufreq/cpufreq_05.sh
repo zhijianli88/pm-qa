@@ -23,7 +23,7 @@
 #       - initial API and implementation
 #
 
-# URL : https://wiki.linaro.org/WorkingGroups/PowerManagement/Doc/QA/Scripts#cpufreq_05
+# URL : https://wiki.linaro.org/WorkingGroups/PowerManagement/Resources/TestSuite/PmQaSpecification#cpufreq_05
 
 source ../include/functions.sh
 

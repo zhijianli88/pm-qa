@@ -23,7 +23,7 @@
 #       - initial API and implementation
 #
 
-# URL : https://wiki.linaro.org/WorkingGroups/PowerManagement/Doc/QA/Scripts#thermal_05
+# URL : https://wiki.linaro.org/WorkingGroups/PowerManagement/Resources/TestSuite/PmQaSpecification#thermal_05
 
 source ../include/functions.sh
 source ../include/thermal_functions.sh
