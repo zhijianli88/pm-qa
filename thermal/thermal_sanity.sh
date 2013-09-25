@@ -23,6 +23,7 @@
 #       - initial API and implementation
 #
 
+source ../include/functions.sh
 source ../include/thermal_functions.sh
 
 check_thermal_zone() {
