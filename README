@@ -8,7 +8,6 @@ If you want the test suite to continue when one error has been found, do:
 
 If you want to run a subset of the tests, do:
 
-	make -C sched_mc check
 	make -C cpufreq check
 
 For running cpuidle-stats test, which is 4th subtest in cpuidle; run:
