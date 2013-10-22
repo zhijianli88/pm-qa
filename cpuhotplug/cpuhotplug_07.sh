@@ -28,6 +28,15 @@
 source ../include/functions.sh
 TMPFILE=cpuhotplug_07.tmp
 
+waitfor_udevadm() {
+    while [ 1 ]; do
+        lsof | grep udevadm | grep sock > /dev/null
+        if [ $? -eq 0 ]; then
+             return 0
+        fi
+    done
+}
+
 check_notification() {
     local cpu=$1
     local cpuid=${cpu:3}
@@ -43,6 +52,7 @@ check_notification() {
     rm -f $TMPFILE
     udevadm monitor --kernel --subsystem-match=cpu > $TMPFILE &
     pid=$!
+    waitfor_udevadm
 
     set_offline $cpu
     set_online $cpu
