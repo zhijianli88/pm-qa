@@ -51,6 +51,18 @@ switch_userspace() {
     set_governor $cpu 'userspace'
 }
 
+check_governor() {
+    local cpu=$1
+    local gov=$2
+
+    if [ -e $CPU_PATH/$cpu/cpufreq/$gov ]; then
+        GOV_PATH=$CPU_PATH/$cpu/cpufreq/$gov
+    else
+        GOV_PATH=$CPU_PATH/cpufreq/$gov
+    fi
+    check "'$gov' directory exists" "test -d $GOV_PATH"
+}
+
 supported=$(cat $CPU_PATH/cpu0/cpufreq/scaling_available_governors | grep "ondemand")
 if [ -z "$supported" ]; then
     log_skip "ondemand not supported"
@@ -58,7 +70,7 @@ else
     for cpu in $(ls $CPU_PATH | grep "cpu[0-9].*"); do
         switch_ondemand $cpu
     done
-    check "'ondemand' directory exists" "test -d $CPU_PATH/cpufreq/ondemand"
+    check_governor $cpu 'ondemand'
 fi
 
 supported=$(cat $CPU_PATH/cpu0/cpufreq/scaling_available_governors | grep "conservative")
@@ -68,7 +80,7 @@ else
     for cpu in $(ls $CPU_PATH | grep "cpu[0-9].*"); do
         switch_conservative $cpu
     done
-    check "'conservative' directory exists" "test -d $CPU_PATH/cpufreq/conservative"
+    check_governor $cpu 'conservative'
 fi
 
 supported=$(cat $CPU_PATH/cpu0/cpufreq/scaling_available_governors | grep "userspace")
@@ -90,8 +102,8 @@ if [ $nrcpus > 1 ]; then
     if [ -z $affected ]; then
         switch_ondemand cpu0
         switch_conservative cpu1
-        check "'ondemand' directory exists" "test -d $CPU_PATH/cpufreq/ondemand"
-        check "'conservative' directory exists" "test -d $CPU_PATH/cpufreq/conservative"
+        check_governor cpu0 'ondemand'
+        check_governor cpu1 'conservative'
     else
         log_skip "combine governors not supported"
     fi
