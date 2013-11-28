@@ -30,7 +30,7 @@ TMPFILE=cpuhotplug_07.tmp
 
 waitfor_udevadm() {
     while [ 1 ]; do
-        lsof | grep udevadm | grep sock > /dev/null
+        lsof | grep udevadm | grep 'sock\|netlink' > /dev/null
         if [ $? -eq 0 ]; then
              return 0
         fi
