@@ -44,7 +44,7 @@ pm_trace=1
 timer_sleep=20
 
 # root is needed to fiddle with the clock and use the rtc wakeups.
-if [ $(id -u) != 0 ]; then
+if [ $(id -u) -ne 0 ]; then
 	log_skip "run as non-root"
 	exit 0
 fi

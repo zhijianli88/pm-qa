@@ -181,7 +181,7 @@ check_scaling_freq() {
 
     local flag=0
     for cpu in $(ls $CPU_PATH | grep "cpu[0-9].*"); do
-	if [ $before_freq_list[$index] != $afterf_req_list[$index] ] ; then
+	if [ $before_freq_list[$index] -ne $afterf_req_list[$index] ] ; then
 	    flag=1	
 	fi
         index=$((index + 1)) 
@@ -275,7 +275,7 @@ kill_glmark2() {
         return
     fi
 
-    if [ "$gpu_pid" != 0 ]; then
+    if [ "$gpu_pid" -ne 0 ]; then
 	kill -9 $gpu_pid
     fi
 }

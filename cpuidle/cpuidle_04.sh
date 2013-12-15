@@ -27,7 +27,7 @@ source ../include/functions.sh
 
 CPUIDLE_STATS=./cpuidle_stats
 
-if [ $(id -u) != 0 ]; then
+if [ $(id -u) -ne 0 ]; then
     log_skip "run as non-root"
     exit 0
 fi

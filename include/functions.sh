@@ -126,12 +126,12 @@ wait_latency() {
     local nrfreq=
 
     latency=$(cat $dirpath/cpuinfo_transition_latency)
-    if [ $? != 0 ]; then
+    if [ $? -ne 0 ]; then
 	return 1
     fi
 
     nrfreq=$(cat $dirpath/scaling_available_frequencies | wc -w)
-    if [ $? != 0 ]; then
+    if [ $? -ne 0 ]; then
 	return 1
     fi
 
@@ -226,7 +226,7 @@ check() {
     log_begin "checking $descr"
 
     $func $@
-    if [ $? != 0 ]; then
+    if [ $? -ne 0 ]; then
 	log_end "Err"
 	fail_count=$(($fail_count + 1))
 	return 1

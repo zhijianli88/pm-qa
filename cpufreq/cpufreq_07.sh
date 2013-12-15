@@ -42,7 +42,7 @@ check_ondemand() {
     # wait for a quescient point
     for i in $(seq 1 10); do
 
-	if [ "$minfreq" == "$(get_frequency $cpu)" ]; then
+	if [ "$minfreq" -eq "$(get_frequency $cpu)" ]; then
 
 	    $CPUBURN $cpu &
 	    pid=$!
@@ -77,7 +77,7 @@ check_ondemand() {
     return 1
 }
 
-if [ $(id -u) != 0 ]; then
+if [ $(id -u) -ne 0 ]; then
     log_skip "run as non-root"
     exit 0
 fi

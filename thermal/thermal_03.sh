@@ -32,7 +32,7 @@ CPU_HEAT_BIN=../utils/heat_cpu
 cpu_pid=0
 
 heater_kill() {
-    if [ $cpu_pid != 0 ]; then
+    if [ $cpu_pid -ne 0 ]; then
 	kill -9 $cpu_pid
     fi
     kill_glmark2
