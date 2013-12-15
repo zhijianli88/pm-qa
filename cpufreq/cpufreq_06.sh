@@ -37,7 +37,7 @@ compute_freq_ratio() {
     set_frequency $cpu $freq
 
     result=$($CPUCYCLE $cpu)
-    if [ $? != 0 ]; then
+    if [ $? -ne 0 ]; then
 	return 1
     fi
 
@@ -101,7 +101,7 @@ check_deviation() {
     for_each_frequency $cpu check_freq_deviation
 }
 
-if [ $(id -u) != 0 ]; then
+if [ $(id -u) -ne 0 ]; then
     log_skip "run as non-root"
     exit 0
 fi

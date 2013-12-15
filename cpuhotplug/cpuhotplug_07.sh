@@ -34,7 +34,9 @@ waitfor_udevadm() {
         if [ $? -eq 0 ]; then
              return 0
         fi
+	log_skip "warning: udev monitor not running"
     done
+    return 1
 }
 
 check_notification() {

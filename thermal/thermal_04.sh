@@ -31,7 +31,7 @@ HEAT_CPU_MODERATE=../utils/heat_cpu
 pid=0
 
 heater_kill() {
-    if [ $pid != 0 ]; then
+    if [ $pid -ne 0 ]; then
 	kill -9 $pid
     fi
 }

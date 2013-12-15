@@ -66,7 +66,7 @@ check_userspace() {
 
 save_governors
 
-if [ $(id -u) != 0 ]; then
+if [ $(id -u) -ne 0 ]; then
     log_skip "run as non-root"
     exit 0
 fi

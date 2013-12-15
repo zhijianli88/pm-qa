@@ -53,7 +53,7 @@ check_powersave() {
     kill $pid
 
     check "'powersave' frequency $(frequnit $minfreq) is fixed" "test \"$curfreq\" == \"$minfreq\""
-    if [ "$?" != "0" ]; then
+    if [ "$?" -ne "0" ]; then
 	return 1
     fi
 
@@ -62,7 +62,7 @@ check_powersave() {
 
 save_governors
 
-if [ $(id -u) != 0 ]; then
+if [ $(id -u) -ne 0 ]; then
     log_skip "run as non-root"
     exit 0
 fi

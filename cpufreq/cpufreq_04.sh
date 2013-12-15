@@ -46,7 +46,7 @@ check_frequency() {
     set_governor $cpu $oldgov
 }
 
-if [ $(id -u) != 0 ]; then
+if [ $(id -u) -ne 0 ]; then
     log_skip "run as non-root"
     exit 0
 fi

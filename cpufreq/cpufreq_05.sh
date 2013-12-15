@@ -27,7 +27,7 @@
 
 source ../include/functions.sh
 
-if [ $(id -u) != 0 ]; then
+if [ $(id -u) -ne 0 ]; then
     log_skip "run as non-root"
     exit 0
 fi
@@ -55,7 +55,7 @@ check_governor() {
     local cpu=$1
     local gov=$2
 
-    if [ -e $CPU_PATH/$cpu/cpufreq/$gov ]; then
+    if [ -d $CPU_PATH/$cpu/cpufreq/$gov ]; then
         GOV_PATH=$CPU_PATH/$cpu/cpufreq/$gov
     else
         GOV_PATH=$CPU_PATH/cpufreq/$gov
@@ -97,7 +97,7 @@ fi
 
 # if more than one cpu, combine governors
 nrcpus=$(ls $CPU_PATH | grep "cpu[0-9].*" | wc -l)
-if [ $nrcpus > 1 ]; then
+if [ $nrcpus -gt 1 ]; then
     affected=$(cat $CPU_PATH/cpu0/cpufreq/affected_cpus | grep 1)
     if [ -z $affected ]; then
         switch_ondemand cpu0
