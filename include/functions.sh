@@ -62,7 +62,6 @@ for_each_cpu() {
     shift 1
 
     cpus=$(ls $CPU_PATH | grep "cpu[0-9].*")
-
     for cpu in $cpus; do
 	INC=0
 	CPU=/$cpu
@@ -286,6 +285,10 @@ check_cpuhotplug_files() {
     shift 1
 
     for i in $@; do
+        # skip check for cpu0
+        if [ `echo $dirpath | grep -c "cpu0"` -eq 1 ]; then
+            continue
+        fi
 	check_file $i $dirpath || return 1
     done
 
