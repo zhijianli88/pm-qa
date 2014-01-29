@@ -27,12 +27,6 @@ source ../include/functions.sh
 
 CPUIDLE_STATS=./cpuidle_stats
 
-is_root
-if [ $? -ne 0 ]; then
-    log_skip "user is not root"
-    exit 0
-fi
-
 check_cpuidle_stats() {
     trace-cmd record -e cpu_idle
     trace-cmd report trace.dat > trace-cpuidle.dat

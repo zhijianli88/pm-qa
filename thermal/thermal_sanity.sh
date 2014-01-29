@@ -26,9 +26,20 @@
 source ../include/functions.sh
 source ../include/thermal_functions.sh
 
+is_root
+if [ $? -ne 0 ]; then
+    log_skip "user is not root"
+    exit 0
+fi
+
 check_thermal_zone() {
 
-    test -d $THERMAL_PATH && return 1 || return 0
+    test -d $THERMAL_PATH
+    if [ $? -ne 0 ]; then
+        echo "thermal zone is not available. Skipping all tests"
+        return 0
+    fi
+    return 1
 }
 
 check_thermal_zone
