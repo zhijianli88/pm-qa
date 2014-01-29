@@ -25,12 +25,22 @@
 
 source ../include/functions.sh
 
+is_root
+if [ $? -ne 0 ]; then
+    log_skip "user is not root"
+    exit 0
+fi
+
 check_cpuidle_sysfs_entry() {
 
     local dirpath=$CPU_PATH/cpuidle
 
-    test -d $dirpath && return 1 || return 0
+    test -d $dirpath
+    if [ $? -ne 0 ]; then
+        echo "cpuidle is not supported. Skipping all cpuidle tests"
+        return 0
+    fi
+    return 1
 }
 
 check_cpuidle_sysfs_entry
-test_status_show

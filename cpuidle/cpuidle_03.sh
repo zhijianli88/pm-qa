@@ -49,12 +49,6 @@ check_cpuidle_kill() {
     check "cpuidle program runs successfully (120 secs)" "./$CPUIDLE_KILLER"
 }
 
-is_root
-if [ $? -ne 0 ]; then
-    log_skip "user is not root"
-    exit 0
-fi
-
 trap "restore_cpus; sigtrap" SIGHUP SIGINT SIGTERM
 
 for_each_cpu check_cpuidle_kill

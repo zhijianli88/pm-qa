@@ -27,12 +27,6 @@
 
 source ../include/functions.sh
 
-is_root
-if [ $? -ne 0 ]; then
-    log_skip "user is not root"
-    exit 0
-fi
-
 check_governor() {
 
     local cpu=$1
