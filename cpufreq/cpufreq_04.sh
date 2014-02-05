@@ -27,6 +27,12 @@
 
 source ../include/functions.sh
 
+is_root
+if [ $? -ne 0 ]; then
+    log_skip "user is not root"
+    exit 0
+fi
+
 check_frequency() {
 
     local cpu=$1
@@ -45,11 +51,6 @@ check_frequency() {
     set_frequency $cpu $oldfreq
     set_governor $cpu $oldgov
 }
-
-if [ $(id -u) -ne 0 ]; then
-    log_skip "run as non-root"
-    exit 0
-fi
 
 supported=$(cat $CPU_PATH/cpu0/cpufreq/scaling_available_governors | grep "userspace")
 if [ -z "$supported" ]; then

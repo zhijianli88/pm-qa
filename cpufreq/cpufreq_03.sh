@@ -27,6 +27,12 @@
 
 source ../include/functions.sh
 
+is_root
+if [ $? -ne 0 ]; then
+    log_skip "user is not root"
+    exit 0
+fi
+
 check_governor() {
 
     local cpu=$1
@@ -42,11 +48,6 @@ check_governor() {
 
     set_governor $cpu $oldgov
 }
-
-if [ $(id -u) -ne 0 ]; then
-    log_skip "run as non-root"
-    exit 0
-fi
 
 for_each_cpu for_each_governor check_governor || exit 1
 test_status_show
