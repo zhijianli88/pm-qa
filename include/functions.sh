@@ -347,3 +347,28 @@ restore_frequencies() {
 sigtrap() {
     exit 255
 }
+
+# currently we support ubuntu and android
+get_os() {
+    lsb_release -a 2>&1 | grep -i ubuntu > /dev/null
+    if [ $? -eq 0 ]; then
+        # for ubuntu
+        return 1
+    else
+        # for android (if needed can look for build.prop)
+        return 2
+    fi
+}
+
+is_root() {
+    local ret
+    get_os
+    if [ $? -eq 1 ]; then
+        # for ubuntu
+        ret=$(id -u)
+    else
+        # for android
+        ret=$(id | sed -n 's/uid=//p' | sed -n 's/(root) [a-z]*=[0-9]*(log)//p')
+    fi
+    return $ret
+}
