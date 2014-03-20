@@ -43,4 +43,3 @@ check_thermal_zone() {
 }
 
 check_thermal_zone
-test_status_show
