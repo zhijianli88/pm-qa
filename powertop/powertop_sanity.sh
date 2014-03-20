@@ -33,4 +33,3 @@ check_powertop() {
 }
 
 check_powertop
-test_status_show
