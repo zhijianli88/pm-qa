@@ -14,5 +14,5 @@ define $(module_name)_add_executable
     include $(BUILD_PREBUILT)
 endef
 
-test_num := 01 02 03 04 05
+test_num := sanity 01 02 03 04 05
 $(foreach item,$(test_num),$(eval $(call $(module_name)_add_executable, $(module_name)_$(item))))
