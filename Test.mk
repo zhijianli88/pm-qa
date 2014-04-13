@@ -20,7 +20,7 @@
 # Contributors:
 #     Daniel Lezcano <daniel.lezcano@linaro.org> (IBM Corporation)
 #       - initial API and implementation
-#
+
 SNT=$(wildcard *sanity.sh)
 TST=$(wildcard *[^(sanity)].sh)
 LOG=$(TST:.sh=.log)
@@ -29,7 +29,10 @@ CC?=gcc
 SRC=$(wildcard *.c)
 EXEC=$(SRC:%.c=%)
 
-check: run_tests
+check: build_utils run_tests
+
+build_utils:
+	gcc ../utils/uevent_reader.c -o ../utils/uevent_reader
 
 SANITY_STATUS:= $(shell if test $(SNT) && test -f $(SNT); then \
 		./$(SNT); if test "$$?" -eq 0; then echo 0; else \

@@ -28,17 +28,6 @@
 source ../include/functions.sh
 TMPFILE=cpuhotplug_07.tmp
 
-waitfor_udevadm() {
-    while [ 1 ]; do
-        lsof | grep udevadm | grep 'sock\|netlink' > /dev/null
-        if [ $? -eq 0 ]; then
-             return 0
-        fi
-	log_skip "warning: udev monitor not running"
-    done
-    return 1
-}
-
 check_notification() {
     local cpu=$1
     local cpuid=${cpu:3}
@@ -52,9 +41,9 @@ check_notification() {
     # damn ! udevadm is buffering the output, we have to use a temp file
     # to retrieve the output
     rm -f $TMPFILE
-    udevadm monitor --kernel --subsystem-match=cpu > $TMPFILE &
+    ../utils/uevent_reader $TMPFILE &
     pid=$!
-    waitfor_udevadm
+    sleep 1
 
     set_offline $cpu
     set_online $cpu
@@ -62,13 +51,13 @@ check_notification() {
     # let the time the notification to reach userspace
     # and buffered in the file
     sleep 1
-    kill $pid
+    kill -s INT $pid
 
-    grep "offline" $TMPFILE | grep -q "/devices/system/cpu/$cpu"
+    grep "offline@/devices/system/cpu/$cpu" $TMPFILE
     ret=$?
     check "offline event was received" "test $ret -eq 0"
 
-    grep "online" $TMPFILE | grep -q "/devices/system/cpu/$cpu"
+    grep "online@/devices/system/cpu/$cpu" $TMPFILE
     ret=$?
     check "online event was received" "test $ret -eq 0"
 

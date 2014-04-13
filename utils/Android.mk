@@ -14,5 +14,5 @@ define $(module_name)_etc_add_executable
     include $(BUILD_EXECUTABLE)
 endef
 
-test_names := cpuburn cpucycle heat_cpu nanosleep
+test_names := cpuburn cpucycle heat_cpu nanosleep uevent_reader
 $(foreach item,$(test_names),$(eval $(call $(module_name)_etc_add_executable, $(item))))
