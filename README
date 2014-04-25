@@ -1,3 +1,5 @@
+General Info
+============
 - In order to run the tests, invoke as root:
 
 	make check
@@ -19,3 +21,16 @@ Note: Any other value for TEST will not run any other subtest
 - The test specifications can be found at
 
 https://wiki.linaro.org/WorkingGroups/PowerManagement/Resources/TestSuite/PmQaSpecification
+
+Other info
+==========
+- PM-QA is one of the tools in the external opensource modules in the external
+  path of android. For building on android, the makefile Android.mk is used to
+  build the testsuite with a makefile for each subtest.
+- Incase you are extending a subtest, say a new script which will test a
+  feature. Add the test number in the Android.mk, in addition to this if its
+  using a source file (say .c), add the source file in the Android.mk so that
+  it gets built.
+- LAVA scripts are used to trigger the pm-qa tests.
+- Similarly for non-android adding a script and txt (test description) pair is
+  needed to extent the suite.
