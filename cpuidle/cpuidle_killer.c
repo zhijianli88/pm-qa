@@ -102,9 +102,9 @@ int isonline(int cpu)
 
 int main(int argc, char *argv[])
 {
-	int ret, i, nrcpus = 2;
+	int ret, i, nrcpus;
 	int nrsleeps, delay;
-	pid_t pids[nrcpus];
+	pid_t *pids;
 	struct timex timex = { 0 };
 
 	if (adjtimex(&timex) < 0) {
@@ -121,6 +121,11 @@ int main(int argc, char *argv[])
 	}
 
 	fprintf(stderr, "found %d cpu(s)\n", nrcpus);
+	pids = (pid_t *) calloc(nrcpus, sizeof(pid_t));
+	if (pids == NULL) {
+		fprintf(stderr, "error: calloc failed\n");
+		return 1;
+	}
 
 	for (i = 0; i < nrcpus; i++) {
 
