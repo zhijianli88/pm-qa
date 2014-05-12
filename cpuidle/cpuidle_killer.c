@@ -71,7 +71,7 @@ int tick_me(int nrsleeps, int delay, int cpu)
 			counter++;
 	}
 
-	fprintf(stderr, "counter value %lu\n", counter);
+	fprintf(stderr, "CPU%d counter value %lu\n", cpu, counter);
 
 	return 0;
 }
@@ -150,8 +150,8 @@ int main(int argc, char *argv[])
 			nrsleeps = SEC_TO_USEC(DURATION) / (timex.tick * 10);
 			delay    = SEC_TO_USEC(DURATION) / nrsleeps;
 
-			fprintf(stderr, "duration: %d secs, #sleep: %d, delay: %d us\n",
-			       DURATION, nrsleeps, delay);
+			fprintf(stderr, "CPU%d duration: %d secs, #sleep: %d,"
+			       " delay: %d us\n", i, DURATION, nrsleeps, delay);
 
 			gettimeofday(&before, NULL);
 			if (tick_me(nrsleeps, delay, i))
@@ -161,13 +161,13 @@ int main(int argc, char *argv[])
 			duration = SEC_TO_USEC(after.tv_sec - before.tv_sec) +
 				(after.tv_usec - before.tv_usec);
 
-			fprintf(stderr, "test duration: %f secs\n",
+			fprintf(stderr, "CPU%d test duration: %f secs\n", i,
 				(float)(duration) / (float)SEC_TO_USEC(1));
 
 			deviation = ((float)duration - (float)SEC_TO_USEC(DURATION)) /
 				(float)SEC_TO_USEC(DURATION);
 
-			fprintf(stderr, "deviation %f\n", deviation);
+			fprintf(stderr, "CPU%d deviation %f\n", i, deviation);
 			if (deviation > 0.5) {
 				fprintf(stderr, "expected test duration too long\n");
 				return 1;
