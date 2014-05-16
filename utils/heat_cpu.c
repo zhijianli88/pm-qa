@@ -99,6 +99,11 @@ int main(int arg_count, char *argv[])
 	int num_cpus = sysconf(_SC_NPROCESSORS_ONLN);
 	cpu_set_t cpuset;
 
+	if (num_cpus < 0) {
+		printf("ERROR: sysconf failed to online cpus\n");
+		return 1;
+	}
+
 	printf("Num CPUs: %d\n", num_cpus);
 	if (arg_count > 1) {
 		if (!strcmp("moderate", argv[1])) {
@@ -120,7 +125,7 @@ int main(int arg_count, char *argv[])
 	}
 
 	pthread_t *p_thread_ptr = (pthread_t *) malloc(
-					num_cpus * sizeof(pthread_attr_t));
+					num_cpus * sizeof(pthread_t));
 
 	if (!p_thread_ptr) {
 		printf("ERROR: out of memory\n");
@@ -141,7 +146,7 @@ int main(int arg_count, char *argv[])
 #endif
 
 #else
-		ret = pthread_attr_setschedpolicy(&p[i], SCHED_NORMAL);
+		ret = pthread_attr_setschedpolicy(&p[i], SCHED_OTHER);
 #endif
 		/* for each new object */
 		CPU_SET(i, &cpuset);
@@ -165,7 +170,7 @@ int main(int arg_count, char *argv[])
 		ret = pthread_create(&p_thread_ptr[i], &p[i],
 							do_loop, (void *)i);
 		if (ret < 0)
-			printf("Error setting affinity for cpu%d\n", i);
+			printf("Error pthread_create failed for cpu%d\n", i);
 
 #ifdef ANDROID
 		CPU_ZERO(&cpuset);
