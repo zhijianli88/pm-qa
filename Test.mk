@@ -39,13 +39,7 @@ SANITY_STATUS:= $(shell if test $(SNT) && test -f $(SNT); then \
 		echo 1; fi; else echo 1; fi)
 
 ifeq "$(SANITY_STATUS)" "1"
-
-ifeq "$(TEST)" "4"
-TST=cpuidle_04.sh
 run_tests: uncheck $(EXEC) $(LOG)
-else
-run_tests: uncheck $(EXEC) $(LOG)
-endif
 
 %.log: %.sh
 	@echo "###"

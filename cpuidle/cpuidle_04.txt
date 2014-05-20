@@ -1,1 +1,0 @@
-Run cpuidle_stats program to check runtime cpuidle statistics.

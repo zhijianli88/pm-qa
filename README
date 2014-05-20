@@ -12,12 +12,6 @@ General Info
 
 	make -C cpufreq check
 
-- For running cpuidle-stats test, which is 4th subtest in cpuidle; run:
-
-	make -C cpuidle check TEST=4
-
-Note: Any other value for TEST will not run any other subtest
-
 - The test specifications can be found at
 
 https://wiki.linaro.org/WorkingGroups/PowerManagement/Resources/TestSuite/PmQaSpecification
@@ -34,3 +28,4 @@ Other info
 - LAVA scripts are used to trigger the pm-qa tests.
 - Similarly for non-android adding a script and txt (test description) pair is
   needed to extent the suite.
+=======
