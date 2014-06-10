@@ -53,17 +53,11 @@ check_ondemand() {
 	    kill $pid
 
 	    check "'ondemand' increase frequency on load" "test \"$curfreq\" == \"$maxfreq\""
-	    if [ "$?" != "0" ]; then
-		return 1
-	    fi
 
 	    sleep 1
 	    curfreq=$(get_frequency $cpu)
 
 	    check "'ondemand' decrease frequency on idle" "test \"$curfreq\" == \"$minfreq\""
-	    if [ "$?" != "0" ]; then
-		return 1
-	    fi
 
 	    return 0
 	fi
