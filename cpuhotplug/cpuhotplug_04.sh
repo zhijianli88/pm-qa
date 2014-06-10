@@ -40,7 +40,7 @@ check_task_migrate() {
 	return 0
     fi
 
-    taskset -c 0x$cpumask $CPUBURN $cpu &
+    taskset 0x$cpumask $CPUBURN $cpu &
     pid=$!
     sleep 1 # let taskset to do setaffinity before checking
 
