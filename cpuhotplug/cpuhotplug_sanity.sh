@@ -34,6 +34,12 @@ fi
 check_cpuhotplug_sysfs_entry() {
 
     cpus=$(ls $CPU_PATH | grep "cpu[0-9].*")
+    cpunum=$(ls $CPU_PATH | grep "cpu[0-9].*" -c)
+
+    if [ $cpunum -eq 1 ]; then
+        echo "skip test, uniprocessor system"
+        return 0
+    fi
 
     for cpu in $cpus; do
         # assuming cpu0 can't be plugged out
