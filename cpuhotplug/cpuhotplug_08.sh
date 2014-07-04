@@ -28,7 +28,11 @@
 source ../include/functions.sh
 
 function randomize() {
-    echo $[ ( $RANDOM % $1 )  + 1 ]
+    if [ $hotplug_allow_cpu0 -eq 0 ]; then
+   	echo $[ ( $RANDOM % $1 )  + 1 ]
+    else
+	echo $[ ( $RANDOM % $1 ) ]
+    fi
 }
 
 random_stress() {

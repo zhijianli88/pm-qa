@@ -33,7 +33,7 @@ check_procinfo() {
     local ret=
 
     if [ "$cpu" == "cpu0" ]; then
-	return 0
+	is_cpu0_hotplug_allowed $hotplug_allow_cpu0 || return 0
     fi
 
     set_offline $cpu

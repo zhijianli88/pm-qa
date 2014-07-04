@@ -21,14 +21,14 @@
 #     Torez Smith <torez.smith@linaro.org> (IBM Corporation)
 #       - initial API and implementation
 #
-
+hotplug_allow_cpu0?=0
 all:
 	@(cd utils; $(MAKE))
 
 check:
 	@(cd utils; $(MAKE) check)
 	@(cd cpufreq; $(MAKE) check)
-	@(cd cpuhotplug; $(MAKE) check)
+	@(cd cpuhotplug; $(MAKE) hotplug_allow_cpu0=${hotplug_allow_cpu0} check)
 	@(cd cpuidle; $(MAKE) check)
 #	@(cd suspend; $(MAKE) check)
 	@(cd thermal; $(MAKE) check)

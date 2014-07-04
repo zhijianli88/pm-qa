@@ -21,5 +21,5 @@
 #     Daniel Lezcano <daniel.lezcano@linaro.org> (IBM Corporation)
 #       - initial API and implementation
 #
-
+export hotplug_allow_cpu0?=0
 include ../Test.mk

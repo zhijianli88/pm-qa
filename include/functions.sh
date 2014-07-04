@@ -285,10 +285,12 @@ check_cpuhotplug_files() {
     shift 1
 
     for i in $@; do
-        # skip check for cpu0
-        if [ `echo $dirpath | grep -c "cpu0"` -eq 1 ]; then
-            continue
-        fi
+	if [ `echo $dirpath | grep -c "cpu0"` -eq 1 ]; then
+        	if [ $hotplug_allow_cpu0 -eq 0 ]; then
+			continue
+		fi
+	fi
+
 	check_file $i $dirpath || return 1
     done
 
@@ -371,4 +373,14 @@ is_root() {
         ret=$(id | sed -n 's/uid=//p' | sed -n 's/(root) [a-z]*=[0-9]*(log)//p')
     fi
     return $ret
+}
+
+is_cpu0_hotplug_allowed() {
+    local status=$1
+
+    if [ $status -eq 1 ]; then
+	return 0
+    else
+	return 1
+    fi
 }
