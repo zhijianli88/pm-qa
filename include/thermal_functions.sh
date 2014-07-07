@@ -163,6 +163,10 @@ for_each_cooling_device() {
     shift 1
 
     devices=$(ls $THERMAL_PATH | grep "cooling_device['$MAX_CDEV']")
+    if [ "$devices" == "" ]; then
+	log_skip "no cooling devices"
+	return 0
+    fi
 
     ALL_DEVICE=$devices
     for device in $devices; do
