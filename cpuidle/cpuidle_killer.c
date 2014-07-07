@@ -33,7 +33,7 @@ void sighandler(int sig)
 
 void timeout(int sig)
 {
-	printf("Test duration exceeded\n");
+	printf("Err : Test duration exceeded\n");
 	exit(1);
 }
 
