@@ -241,7 +241,7 @@ check_file() {
     local file=$1
     local dir=$2
 
-    check "'$file' exists" "test -f" $dir/$file
+    check "'$file' exists in '$dir'" "test -f" $dir/$file
 }
 
 check_cpufreq_files() {
