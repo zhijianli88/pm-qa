@@ -43,11 +43,11 @@ check_valid_temp() {
     log_begin "checking $descr"
 
     if [ $temp_val -gt 0 ]; then
-        log_end "pass"
+        log_end "Ok"
         return 0
     fi
 
-    log_end "fail"
+    log_end "Err"
 
     return 1
 }
