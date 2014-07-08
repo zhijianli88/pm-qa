@@ -50,5 +50,5 @@ random_stress() {
     check "cpu$cpurand is online" "test $ret -eq 0"
 }
 
-for i in $(seq 1 50); do random_stress || break; done
+for i in $(seq 1 50); do random_stress ; done
 test_status_show
