@@ -181,10 +181,16 @@ int main(int argc, char *argv[])
 
 	signal(SIGALRM, timeout);
 
-	alarm(DURATION + 5);
+	alarm(DURATION + 20);
 
 	for (i = 0; i < nrcpus; i++) {
 		int status;
+
+		/* skip for offline cpus */
+		if (!pids[i]) {
+			fprintf(stderr, "no_wait_for_process on cpu %d\n", i);
+			continue;
+		}
 
 		waitpid(pids[i], &status, 0);
 		if (status != 0) {
