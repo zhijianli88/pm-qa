@@ -125,11 +125,11 @@ check_valid_binding() {
 
     log_begin "checking $descr"
     if [ $trip_point_val -ge $trip_point_max ]; then
-        log_end "fail"
+        log_end "Err"
         return 1
     fi
 
-    log_end "pass"
+    log_end "Ok"
     return 0
 }
 
