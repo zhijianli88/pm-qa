@@ -22,7 +22,7 @@
 #       - initial API and implementation
 
 SNT=$(wildcard *sanity.sh)
-TST=$(wildcard *[^(sanity)].sh)
+TST=$(wildcard *[^{sanity}].sh)
 LOG=$(TST:.sh=.log)
 CFLAGS?=-g -Wall -pthread
 CC?=gcc
@@ -57,6 +57,6 @@ clean:
 	rm -f *.o $(EXEC)
 
 uncheck:
-	-@test ! -z "$(LOG)" && rm -f $(LOG)
+	-@$(shell test ! -z "$(LOG)" && rm -f $(LOG))
 
 recheck: uncheck check
