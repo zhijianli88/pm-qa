@@ -33,6 +33,7 @@
 #  - hongbo.zhang@linaro.org, March, 2012
 #
 
+source ./functions.sh
 
 LOGDIR='/var/lib/pm-utils'
 LOGFILE="$LOGDIR/stress.log"
@@ -44,9 +45,10 @@ pm_trace=1
 timer_sleep=20
 
 # root is needed to fiddle with the clock and use the rtc wakeups.
-if [ $(id -u) -ne 0 ]; then
-	log_skip "run as non-root"
-	exit 0
+is_root
+if [ $? -ne 0 ]; then
+    log_skip "user is not root"
+    exit 0
 fi
 
 # Ensure the log directory exists.
