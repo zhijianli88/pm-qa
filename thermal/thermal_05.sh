@@ -36,7 +36,8 @@ verify_cpufreq_cooling_device_action() {
     local cpufreq_cdev=$(cat $dirpath/type)
     cat $dirpath/type | grep cpufreq
     if [ $? -ne 0  ] ; then
-	return 0
+        log_skip "Cannot find cpufreq in $cdev_name..."
+	    return 0
     fi
 
     local max_state=$(cat $dirpath/max_state)

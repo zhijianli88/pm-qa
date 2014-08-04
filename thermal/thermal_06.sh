@@ -30,7 +30,7 @@ source ../include/thermal_functions.sh
 
 if [ "$thermal_try_max" -eq 0 ]; then
     log_skip "test of trip points being crossed"
-    exit 0
+    return 0
 fi
 
 TEST_LOOP=100

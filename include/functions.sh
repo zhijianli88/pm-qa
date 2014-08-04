@@ -32,14 +32,31 @@ INC=0
 CPU=
 pass_count=0
 fail_count=0
+skip_count=0
+test_script_status="pass"
 
 test_status_show() {
-    echo "-------- total = $(($pass_count + $fail_count))"
-    echo "-------- pass = $pass_count"
-    # report failure only if it is there
-    if [ $fail_count -ne 0 ] ; then
-      echo "-------- fail = $fail_count"
+    if [ $fail_count -ne 0 ]; then
+        test_script_status="fail"
+    else
+        if [ $skip_count -ne 0 ]; then
+            if [ $pass_count -ne 0 ]; then
+                test_script_status="pass"
+            else
+                test_script_status="skip"
+            fi
+        fi
     fi
+
+    echo " "
+    if [[ "$test_script_status" == "fail" ]]; then
+        echo "$TEST_NAME: fail"
+    elif [[ "$test_script_status" == "skip" ]]; then
+        echo "$TEST_NAME: skip"
+    else
+        echo "$TEST_NAME: pass"
+    fi
+    echo " "
 }
 
 log_begin() {
@@ -49,6 +66,14 @@ log_begin() {
 
 log_end() {
     printf "$*\n"
+
+    if [[ "$*" == "Err" ]]; then
+        fail_count=$((fail_count + 1))
+    elif [[ "$*" == "skip" ]]; then
+        skip_count=$((skip_count + 1))
+    else
+        pass_count=$((pass_count + 1))
+    fi
 }
 
 log_skip() {
