@@ -123,6 +123,17 @@ wait_latency() {
     local dirpath=$CPU_PATH/$cpu/cpufreq
     local latency=
     local nrfreq=
+    local sampling_rate=
+    local sleep_time=
+    local gov=$(cat $dirpath/scaling_governor)
+
+    # consider per-policy governor case
+    if [ -e $CPU_PATH/$cpu/cpufreq/$gov ]; then
+	sampling_rate=$(cat $CPU_PATH/$cpu/cpufreq/$gov/sampling_rate)
+    else
+        sampling_rate=$(cat $CPU_PATH/cpufreq/$gov/sampling_rate)
+    fi
+    sampling_rate=$((sampling_rate * 1000)) # unit nsec
 
     latency=$(cat $dirpath/cpuinfo_transition_latency)
     if [ $? -ne 0 ]; then
@@ -135,7 +146,10 @@ wait_latency() {
     fi
 
     nrfreq=$((nrfreq + 1))
-    ../utils/nanosleep $(($nrfreq * $latency))
+
+    sleep_time=$(($latency + $sampling_rate))
+
+    ../utils/nanosleep $(($nrfreq * $sleep_time))
 }
 
 frequnit() {
