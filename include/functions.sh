@@ -266,12 +266,10 @@ check() {
     $func $@
     if [ $? -ne 0 ]; then
 	log_end "Err"
-	fail_count=$(($fail_count + 1))
 	return 1
     fi
 
     log_end "Ok"
-    pass_count=$(($pass_count + 1))
 
     return 0
 }
