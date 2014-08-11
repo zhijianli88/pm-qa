@@ -184,7 +184,7 @@ check_scaling_freq() {
     local index=0
 
     local flag=0
-    for cpu in $(ls $CPU_PATH | grep "cpu[0-9].*"); do
+    for cpu in $cpus; do
 	if [ $before_freq_list[$index] -ne $afterf_req_list[$index] ] ; then
 	    flag=1	
 	fi
@@ -197,7 +197,7 @@ store_scaling_maxfreq() {
     scale_freq=
     local index=0
 
-    for cpu in $(ls $CPU_PATH | grep "cpu[0-9].*"); do
+    for cpu in $cpus; do
 	scale_freq[$index]=$(cat $CPU_PATH/$cpu/cpufreq/scaling_max_freq)
         index=$((index + 1))
     done

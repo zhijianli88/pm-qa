@@ -62,7 +62,7 @@ supported=$(cat $CPU_PATH/cpu0/cpufreq/scaling_available_governors | grep "ondem
 if [ -z "$supported" ]; then
     log_skip "ondemand not supported"
 else
-    for cpu in $(ls $CPU_PATH | grep "cpu[0-9].*"); do
+    for cpu in $cpus; do
         switch_ondemand $cpu
     done
     check_governor $cpu 'ondemand'
@@ -72,7 +72,7 @@ supported=$(cat $CPU_PATH/cpu0/cpufreq/scaling_available_governors | grep "conse
 if [ -z "$supported" ]; then
     log_skip "conservative not supported"
 else
-    for cpu in $(ls $CPU_PATH | grep "cpu[0-9].*"); do
+    for cpu in $cpus; do
         switch_conservative $cpu
     done
     check_governor $cpu 'conservative'
@@ -82,7 +82,7 @@ supported=$(cat $CPU_PATH/cpu0/cpufreq/scaling_available_governors | grep "users
 if [ -z "$supported" ]; then
     log_skip "userspace not supported"
 else
-    for cpu in $(ls $CPU_PATH | grep "cpu[0-9].*"); do
+    for cpu in $cpus; do
         switch_userspace $cpu
     done
 

@@ -30,6 +30,7 @@ TEST_NAME=$(basename ${0%.sh})
 PREFIX=$TEST_NAME
 INC=0
 CPU=
+cpus=$(ls -1v $CPU_PATH | grep "cpu[0-9].*")
 pass_count=0
 fail_count=0
 skip_count=0
@@ -86,7 +87,6 @@ for_each_cpu() {
     local func=$1
     shift 1
 
-    cpus=$(ls $CPU_PATH | grep "cpu[0-9].*")
     for cpu in $cpus; do
 	INC=0
 	CPU=/$cpu
@@ -339,8 +339,8 @@ save_governors() {
     governors_backup=
     local index=0
 
-    for i in $(ls $CPU_PATH | grep "cpu[0-9].*"); do
-	governors_backup[$index]=$(cat $CPU_PATH/$i/cpufreq/scaling_governor)
+    for cpu in $cpus; do
+	governors_backup[$index]=$(cat $CPU_PATH/$cpu/cpufreq/scaling_governor)
 	index=$((index + 1))
     done
 }
@@ -350,9 +350,9 @@ restore_governors() {
     local index=0
     local oldgov=
 
-    for i in $(ls $CPU_PATH | grep "cpu[0-9].*"); do
+    for cpu in $cpus; do
 	oldgov=${governors_backup[$index]}
-	echo $oldgov > $CPU_PATH/$i/cpufreq/scaling_governor
+	echo $oldgov > $CPU_PATH/$cpu/cpufreq/scaling_governor
 	index=$((index + 1))
     done
 }
@@ -361,8 +361,6 @@ save_frequencies() {
 
     frequencies_backup=
     local index=0
-    local cpus=$(ls $CPU_PATH | grep "cpu[0-9].*")
-    local cpu=
 
     for cpu in $cpus; do
 	frequencies_backup[$index]=$(cat $CPU_PATH/$cpu/cpufreq/scaling_cur_freq)
@@ -374,7 +372,6 @@ restore_frequencies() {
 
     local index=0
     local oldfreq=
-    local cpus=$(ls $CPU_PATH | grep "cpu[0-9].*")
 
     for cpu in $cpus; do
 	oldfreq=${frequencies_backup[$index]}
