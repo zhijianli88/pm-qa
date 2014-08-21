@@ -65,7 +65,7 @@ save_governors
 supported=$(cat $CPU_PATH/cpu0/cpufreq/scaling_available_governors | grep "powersave")
 if [ -z "$supported" ]; then
     log_skip "powersave not supported"
-    exit 0
+    return 0
 fi
 
 trap "restore_governors; sigtrap" SIGHUP SIGINT SIGTERM

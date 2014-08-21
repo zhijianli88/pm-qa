@@ -37,6 +37,7 @@ check_thermal_zone() {
     test -d $THERMAL_PATH
     if [ $? -ne 0 ]; then
         echo "thermal zone is not available. Skipping all tests"
+        skip_tests thermal
         return 0
     fi
     return 1

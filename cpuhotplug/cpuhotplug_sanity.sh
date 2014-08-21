@@ -37,6 +37,7 @@ check_cpuhotplug_sysfs_entry() {
 
     if [ $cpunum -eq 1 ]; then
         echo "skip test, uniprocessor system"
+        skip_tests cpuhotplug
         return 0
     fi
 
@@ -46,6 +47,7 @@ check_cpuhotplug_sysfs_entry() {
             test -f $CPU_PATH/$cpu/online
             if [ $? -ne 0 ]; then
                 echo "cpuhotplug is not supported. Skipping all cpuhotplug tests"
+                skip_tests cpuhotplug
                 return 0
             fi
         fi

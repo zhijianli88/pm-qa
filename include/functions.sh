@@ -60,6 +60,17 @@ test_status_show() {
     echo " "
 }
 
+skip_tests() {
+    dir=$1
+
+    test_script_list=$(ls ../$1/*.sh | grep -v 'sanity.sh$' | grep -v '00.sh$')
+
+    for test_script in $test_script_list; do
+        test_case=$(basename $test_script .sh)
+        echo "$test_case: skip"
+    done
+}
+
 log_begin() {
     printf "%-76s" "$TEST_NAME.$INC$CPU: $@... "
     INC=$(($INC+1))

@@ -49,8 +49,9 @@ run_tests: uncheck $(EXEC) $(LOG)
 	@echo "###"
 	-@./$< 2> $@
 else
-run_tests: $(SNT)
-	@cat $(<:.sh=.txt)
+run_tests:
+	./$(SNT)
+#	@cat $(<:.sh=.txt)
 endif
 
 clean:

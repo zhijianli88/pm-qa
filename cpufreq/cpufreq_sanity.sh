@@ -38,6 +38,7 @@ check_cpufreq_sysfs_entry() {
     test -d $dirpath
     if [ $? -ne 0 ]; then
         echo "cpufreq is not supported. Skipping all cpufreq tests"
+        skip_tests cpufreq
         return 0
     fi
     return 1

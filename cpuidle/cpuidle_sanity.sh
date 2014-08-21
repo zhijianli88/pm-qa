@@ -38,6 +38,7 @@ check_cpuidle_sysfs_entry() {
     test -d $dirpath
     if [ $? -ne 0 ]; then
         echo "cpuidle is not supported. Skipping all cpuidle tests"
+        skip_tests cpuidle
         return 0
     fi
     return 1
