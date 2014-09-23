@@ -48,8 +48,6 @@ verify_cooling_device_temp_change() {
     fi
     local max_state=$(cat $dirpath/max_state)
     local prev_state_val=$(cat $dirpath/cur_state)
-    local prev_mode_val=$(cat $tzonepath/mode)
-    echo -n disabled > $tzonepath/mode
 
     local count=1
     local cur_state_val=0
@@ -74,11 +72,15 @@ verify_cooling_device_temp_change() {
 	count=$((count+1))
     done
     heater_kill
-    echo $prev_mode_val > $tzonepath/mode
     echo $prev_state_val > $dirpath/cur_state
 }
 
 trap "heater_kill; sigtrap" SIGHUP SIGINT SIGTERM
 
+set_thermal_governors user_space
+
 for_each_cooling_device verify_cooling_device_temp_change
+
+restore_thermal_governors
+
 test_status_show
