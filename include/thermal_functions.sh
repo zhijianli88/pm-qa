@@ -185,7 +185,7 @@ check_scaling_freq() {
 
     local flag=0
     for cpu in $cpus; do
-	if [ $before_freq_list[$index] -ne $after_freq_list[$index] ] ; then
+	if [ ${before_freq_list[$index]} -ne ${after_freq_list[$index]} ] ; then
 	    flag=1	
 	fi
         index=$((index + 1)) 
@@ -237,7 +237,7 @@ enable_all_thermal_zones() {
 
     local th_zones=$(ls $THERMAL_PATH | grep "thermal_zone['$MAX_ZONE']")
     for zone in $th_zones; do
-	echo $mode_list[$index] > $THERMAL_PATH/$zone/mode
+	echo ${mode_list[$index]} > $THERMAL_PATH/$zone/mode
         index=$((index + 1))
     done
     return 0
