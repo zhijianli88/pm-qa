@@ -60,7 +60,11 @@ check_cooling_device_states() {
     echo $prev_state_val > $dirpath/cur_state
 }
 
-for_each_cooling_device check_cooling_device_attributes
+set_thermal_governors user_space
 
+for_each_cooling_device check_cooling_device_attributes
 for_each_cooling_device check_cooling_device_states
+
+restore_thermal_governors
+
 test_status_show

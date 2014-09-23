@@ -283,3 +283,30 @@ kill_glmark2() {
 	kill -9 $gpu_pid
     fi
 }
+
+set_thermal_governors() {
+
+    local gov=$1
+    local index=0
+    thermal_governor_backup[MAX_ZONE]=
+
+    local th_zones=$(ls $THERMAL_PATH | grep "thermal_zone['$MAX_ZONE']")
+    for zone in $th_zones; do
+        thermal_governor_backup[$index]=$(cat $THERMAL_PATH/$zone/policy)
+        index=$((index + 1))
+        echo $gov > $THERMAL_PATH/$zone/policy
+    done
+    return 0
+}
+
+restore_thermal_governors() {
+
+    local index=0
+
+    local th_zones=$(ls $THERMAL_PATH | grep "thermal_zone['$MAX_ZONE']")
+    for zone in $th_zones; do
+	echo ${thermal_governor_backup[$index]} > $THERMAL_PATH/$zone/policy
+        index=$((index + 1))
+    done
+    return 0
+}
