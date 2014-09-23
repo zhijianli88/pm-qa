@@ -185,7 +185,7 @@ check_scaling_freq() {
 
     local flag=0
     for cpu in $cpus; do
-	if [ $before_freq_list[$index] -ne $afterf_req_list[$index] ] ; then
+	if [ $before_freq_list[$index] -ne $after_freq_list[$index] ] ; then
 	    flag=1	
 	fi
         index=$((index + 1)) 
