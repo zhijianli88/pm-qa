@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 #
 # PM-QA validation test suite for the power management on Linux
 #
@@ -23,8 +23,8 @@
 #       - initial API and implementation
 #
 
-source ../include/functions.sh
-source ../include/thermal_functions.sh
+. ../include/functions.sh
+. ../include/thermal_functions.sh
 
 is_root
 if [ $? -ne 0 ]; then

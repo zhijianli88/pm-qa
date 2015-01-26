@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 #
 # PM-QA validation test suite for the power management on Linux
 #
@@ -26,7 +26,7 @@
 # URL : https://wiki.linaro.org/WorkingGroups/PowerManagement/Resources/TestSuite/PmQaSpecification#cpuhotplug_04
 
 CPUBURN=../utils/cpuburn
-source ../include/functions.sh
+. ../include/functions.sh
 
 check_task_migrate() {
     local cpu=$1

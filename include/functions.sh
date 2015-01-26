@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 #
 # PM-QA validation test suite for the power management on Linux
 #
@@ -23,7 +23,7 @@
 #       - initial API and implementation
 #
 
-source ../Switches.sh
+. ../Switches.sh
 
 CPU_PATH="/sys/devices/system/cpu"
 TEST_NAME=$(basename ${0%.sh})

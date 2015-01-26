@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 #
 # PM-QA validation test suite for the power management on Linux
 #
@@ -26,8 +26,8 @@
 # URL : https://wiki.linaro.org/WorkingGroups/PowerManagement/Resources/TestSuite/PmQaSpecification#suspend_05
 
 
-source ../include/functions.sh
-source ../include/suspend_functions.sh
+. ../include/functions.sh
+. ../include/suspend_functions.sh
 
 args_power_sleep=60
 

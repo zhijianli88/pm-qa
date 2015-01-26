@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 #
 # PM-QA validation test suite for the power management on Linux
 #
@@ -25,8 +25,8 @@
 
 # URL : https://wiki.linaro.org/WorkingGroups/PowerManagement/Doc/QA/Scripts#thermal_00
 
-source ../include/functions.sh
-source ../include/thermal_functions.sh
+. ../include/functions.sh
+. ../include/thermal_functions.sh
 
 check_cooling_device_type() {
     local all_zones=$(ls $THERMAL_PATH | grep "cooling_device['$MAX_CDEV']")

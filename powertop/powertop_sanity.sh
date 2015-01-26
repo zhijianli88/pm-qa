@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 #
 # PM-QA validation test suite for the power management on Linux
 #
@@ -23,7 +23,7 @@
 #       - initial API and implementation
 #
 
-source ../include/functions.sh
+. ../include/functions.sh
 
 check_powertop() {
 

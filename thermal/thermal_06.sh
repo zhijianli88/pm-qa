@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 #
 # PM-QA validation test suite for the power management on Linux
 #
@@ -25,8 +25,8 @@
 
 # URL : https://wiki.linaro.org/WorkingGroups/PowerManagement/Resources/TestSuite/PmQaSpecification#thermal_06
 
-source ../include/functions.sh
-source ../include/thermal_functions.sh
+. ../include/functions.sh
+. ../include/thermal_functions.sh
 
 if [ "$thermal_try_max" -eq 0 ]; then
     log_skip "test of trip points being crossed"

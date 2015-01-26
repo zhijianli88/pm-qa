@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 #
 # Script to automate suspend / resume
 #
@@ -33,7 +33,7 @@
 #  - hongbo.zhang@linaro.org, March, 2012
 #
 
-source ./functions.sh
+. ../include/functions.sh
 
 LOGDIR='/var/lib/pm-utils'
 LOGFILE="$LOGDIR/stress.log"

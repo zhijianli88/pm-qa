@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 #
 # PM-QA validation test suite for the power management on Linux
 #
@@ -25,7 +25,7 @@
 
 # URL : https://wiki.linaro.org/WorkingGroups/PowerManagement/Resources/TestSuite/PmQaSpecification#cpuhotplug_08
 
-source ../include/functions.sh
+. ../include/functions.sh
 
 function randomize() {
     if [ $hotplug_allow_cpu0 -eq 0 ]; then
