@@ -32,23 +32,23 @@ save_governors
 trap restore_governors HUP INT TERM
 
 switch_ondemand() {
-    local cpu=$1
+    cpu=$1
     set_governor $cpu 'ondemand'
 }
 
 switch_conservative() {
-    local cpu=$1
+    cpu=$1
     set_governor $cpu 'conservative'
 }
 
 switch_userspace() {
-    local cpu=$1
+    cpu=$1
     set_governor $cpu 'userspace'
 }
 
 check_governor() {
-    local cpu=$1
-    local gov=$2
+    cpu=$1
+    gov=$2
 
     if [ -d $CPU_PATH/$cpu/cpufreq/$gov ]; then
         GOV_PATH=$CPU_PATH/$cpu/cpufreq/$gov

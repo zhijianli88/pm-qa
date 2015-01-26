@@ -31,8 +31,8 @@ CPUCYCLE=../utils/cpucycle
 
 compute_freq_ratio() {
 
-    local cpu=$1
-    local freq=$2
+    cpu=$1
+    freq=$2
 
     set_frequency $cpu $freq
 
@@ -75,8 +75,8 @@ __check_freq_deviation() {
 
 check_freq_deviation() {
 
-    local cpu=$1
-    local freq=$2
+    cpu=$1
+    freq=$2
 
     check "deviation for frequency $(frequnit $freq)" __check_freq_deviation
 
@@ -84,7 +84,7 @@ check_freq_deviation() {
 
 check_deviation() {
 
-    local cpu=$1
+    cpu=$1
 
     set_governor $cpu userspace
 

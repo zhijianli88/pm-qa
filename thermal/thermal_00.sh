@@ -29,19 +29,19 @@
 . ../include/thermal_functions.sh
 
 check_cooling_device_type() {
-    local all_zones=$(ls $THERMAL_PATH | grep "cooling_device['$MAX_CDEV']")
+    all_zones=$(ls $THERMAL_PATH | grep "cooling_device['$MAX_CDEV']")
     echo "Cooling Device list:"
     for i in $all_zones; do
-	local type=$(cat $THERMAL_PATH/$i/type)
+	type=$(cat $THERMAL_PATH/$i/type)
 	echo "-    $type"
     done
 }
 
 check_thermal_zone_type() {
-    local all_zones=$(ls $THERMAL_PATH | grep "thermal_zone['$MAX_ZONE']")
+    all_zones=$(ls $THERMAL_PATH | grep "thermal_zone['$MAX_ZONE']")
     echo "Thermal Zone list:"
     for i in $all_zones; do
-	local type=$(cat $THERMAL_PATH/$i/type)
+	type=$(cat $THERMAL_PATH/$i/type)
 	echo "-    $type"
     done
 }

@@ -37,23 +37,23 @@ heater_kill() {
 }
 
 verify_cooling_device_temp_change() {
-    local dirpath=$THERMAL_PATH/$1
-    local cdev_name=$1
+    dirpath=$THERMAL_PATH/$1
+    cdev_name=$1
     shift 1
-    local tzonepath=$THERMAL_PATH/thermal_zone0
+    tzonepath=$THERMAL_PATH/thermal_zone0
     test -d $tzonepath
     if [ $? -ne 0 ] ; then
 	echo "No thermal zone present"
 	return 1;
     fi
-    local max_state=$(cat $dirpath/max_state)
-    local prev_state_val=$(cat $dirpath/cur_state)
+    max_state=$(cat $dirpath/max_state)
+    prev_state_val=$(cat $dirpath/cur_state)
 
-    local count=1
-    local cur_state_val=0
-    local init_temp=0
-    local final_temp=0
-    local cool_temp=0
+    count=1
+    cur_state_val=0
+    init_temp=0
+    final_temp=0
+    cool_temp=0
     ./$HEAT_CPU_MODERATE moderate &
     pid=$!
     test $pid -eq 0 && return

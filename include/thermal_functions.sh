@@ -26,20 +26,18 @@
 THERMAL_PATH="/sys/devices/virtual/thermal"
 MAX_ZONE=0-12
 MAX_CDEV=0-50
-ALL_ZONE=
-ALL_CDEV=
 
 check_valid_temp() {
-    local file=$1
-    local zone_name=$2
-    local dir=$THERMAL_PATH/$2
+    file=$1
+    zone_name=$2
+    dir=$THERMAL_PATH/$2
 
-    local temp_file=$dir/$1
-    local func=cat
+    temp_file=$dir/$1
+    func=cat
     shift 2;
 
-    local temp_val=$($func $temp_file)
-    local descr="'$zone_name'/'$file' ='$temp_val'"
+    temp_val=$($func $temp_file)
+    descr="'$zone_name'/'$file' ='$temp_val'"
     log_begin "checking $descr"
 
     if [ $temp_val -gt 0 ]; then
@@ -54,7 +52,7 @@ check_valid_temp() {
 
 for_each_thermal_zone() {
 
-    local func=$1
+    func=$1
     shift 1
 
     zones=$(ls $THERMAL_PATH | grep "thermal_zone['$MAX_ZONE']")
@@ -70,8 +68,8 @@ for_each_thermal_zone() {
 
 get_total_trip_point_of_zone() {
 
-    local zone_path=$THERMAL_PATH/$1
-    local count=0
+    zone_path=$THERMAL_PATH/$1
+    count=0
     shift 1
     trips=$(ls $zone_path | grep "trip_point_['$MAX_ZONE']_temp")
     for trip in $trips; do
@@ -82,10 +80,10 @@ get_total_trip_point_of_zone() {
 
 for_each_trip_point_of_zone() {
 
-    local zone_path=$THERMAL_PATH/$1
-    local count=0
-    local func=$2
-    local zone_name=$1
+    zone_path=$THERMAL_PATH/$1
+    count=0
+    func=$2
+    zone_name=$1
     shift 2
     trips=$(ls $zone_path | grep "trip_point_['$MAX_ZONE']_temp")
     for trip in $trips; do
@@ -97,10 +95,10 @@ for_each_trip_point_of_zone() {
 
 for_each_binding_of_zone() {
 
-    local zone_path=$THERMAL_PATH/$1
-    local count=0
-    local func=$2
-    local zone_name=$1
+    zone_path=$THERMAL_PATH/$1
+    count=0
+    func=$2
+    zone_name=$1
     shift 2
     trips=$(ls $zone_path | grep "cdev['$MAX_CDEV']_trip_point")
     for trip in $trips; do
@@ -113,14 +111,14 @@ for_each_binding_of_zone() {
 }
 
 check_valid_binding() {
-    local trip_point=$1
-    local zone_name=$2
-    local dirpath=$THERMAL_PATH/$2
-    local temp_file=$2/$1
-    local trip_point_val=$(cat $dirpath/$trip_point)
+    trip_point=$1
+    zone_name=$2
+    dirpath=$THERMAL_PATH/$2
+    temp_file=$2/$1
+    trip_point_val=$(cat $dirpath/$trip_point)
     get_total_trip_point_of_zone $zone_name
-    local trip_point_max=$?
-    local descr="'$temp_file' valid binding"
+    trip_point_max=$?
+    descr="'$temp_file' valid binding"
     shift 2
 
     log_begin "checking $descr"
@@ -134,10 +132,10 @@ check_valid_binding() {
 }
 
 validate_trip_bindings() {
-    local zone_name=$1
-    local bind_no=$2
-    local dirpath=$THERMAL_PATH/$1
-    local trip_point=cdev$2_trip_point
+    zone_name=$1
+    bind_no=$2
+    dirpath=$THERMAL_PATH/$1
+    trip_point=cdev$2_trip_point
     shift 2
 
     check_file $trip_point $dirpath || return 1
@@ -145,11 +143,11 @@ validate_trip_bindings() {
 }
 
 validate_trip_level() {
-    local zone_name=$1
-    local trip_no=$2
-    local dirpath=$THERMAL_PATH/$1
-    local trip_temp=trip_point_$2_temp
-    local trip_type=trip_point_$2_type
+    zone_name=$1
+    trip_no=$2
+    dirpath=$THERMAL_PATH/$1
+    trip_temp=trip_point_$2_temp
+    trip_type=trip_point_$2_type
     shift 2
 
     check_file $trip_temp $dirpath || return 1
@@ -159,7 +157,7 @@ validate_trip_level() {
 
 for_each_cooling_device() {
 
-    local func=$1
+    func=$1
     shift 1
 
     devices=$(ls $THERMAL_PATH | grep "cooling_device['$MAX_CDEV']")
@@ -178,12 +176,12 @@ for_each_cooling_device() {
 }
 check_scaling_freq() {
 
-    local before_freq_list=$1
-    local after_freq_list=$2
+    before_freq_list=$1
+    after_freq_list=$2
     shift 2
-    local index=0
+    index=0
 
-    local flag=0
+    flag=0
     for cpu in $cpus; do
 	if [ ${before_freq_list[$index]} -ne ${after_freq_list[$index]} ] ; then
 	    flag=1	
@@ -194,8 +192,7 @@ check_scaling_freq() {
 }
 
 store_scaling_maxfreq() {
-    scale_freq=
-    local index=0
+    index=0
 
     for cpu in $cpus; do
 	scale_freq[$index]=$(cat $CPU_PATH/$cpu/cpufreq/scaling_max_freq)
@@ -206,11 +203,11 @@ store_scaling_maxfreq() {
 
 get_trip_id() {
 
-    local trip_name=$1
+    trip_name=$1
     shift 1
 
-    local id1=$(echo $trip_name|cut -c12)
-    local id2=$(echo $trip_name|cut -c13)
+    id1=$(echo $trip_name|cut -c12)
+    id2=$(echo $trip_name|cut -c13)
     if [ $id2 != "_" ]; then
 	id1=$(($id2 + 10*$id1))
     fi
@@ -219,10 +216,9 @@ get_trip_id() {
 
 disable_all_thermal_zones() {
 
-    mode_list=
-    local index=0
+    index=0
 
-    local th_zones=$(ls $THERMAL_PATH | grep "thermal_zone['$MAX_ZONE']")
+    th_zones=$(ls $THERMAL_PATH | grep "thermal_zone['$MAX_ZONE']")
     for zone in $th_zones; do
 	mode_list[$index]=$(cat $THERMAL_PATH/$zone/mode)
         index=$((index + 1))
@@ -233,9 +229,9 @@ disable_all_thermal_zones() {
 
 enable_all_thermal_zones() {
 
-    local index=0
+    index=0
 
-    local th_zones=$(ls $THERMAL_PATH | grep "thermal_zone['$MAX_ZONE']")
+    th_zones=$(ls $THERMAL_PATH | grep "thermal_zone['$MAX_ZONE']")
     for zone in $th_zones; do
 	echo ${mode_list[$index]} > $THERMAL_PATH/$zone/mode
         index=$((index + 1))
@@ -286,11 +282,10 @@ kill_glmark2() {
 
 set_thermal_governors() {
 
-    local gov=$1
-    local index=0
-    thermal_governor_backup[MAX_ZONE]=
+    gov=$1
+    index=0
 
-    local th_zones=$(ls $THERMAL_PATH | grep "thermal_zone['$MAX_ZONE']")
+    th_zones=$(ls $THERMAL_PATH | grep "thermal_zone['$MAX_ZONE']")
     for zone in $th_zones; do
         thermal_governor_backup[$index]=$(cat $THERMAL_PATH/$zone/policy)
         index=$((index + 1))
@@ -301,9 +296,9 @@ set_thermal_governors() {
 
 restore_thermal_governors() {
 
-    local index=0
+    index=0
 
-    local th_zones=$(ls $THERMAL_PATH | grep "thermal_zone['$MAX_ZONE']")
+    th_zones=$(ls $THERMAL_PATH | grep "thermal_zone['$MAX_ZONE']")
     for zone in $th_zones; do
 	echo ${thermal_governor_backup[$index]} > $THERMAL_PATH/$zone/policy
         index=$((index + 1))

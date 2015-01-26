@@ -29,7 +29,6 @@ CPU_PATH="/sys/devices/system/cpu"
 TEST_NAME=$(basename ${0%.sh})
 PREFIX=$TEST_NAME
 INC=0
-CPU=
 cpus=$(ls $CPU_PATH | grep "cpu[0-9].*")
 pass_count=0
 fail_count=0
@@ -95,7 +94,7 @@ log_skip() {
 
 for_each_cpu() {
 
-    local func=$1
+    func=$1
     shift 1
 
     for cpu in $cpus; do
@@ -109,10 +108,10 @@ for_each_cpu() {
 
 for_each_governor() {
 
-    local cpu=$1
-    local func=$2
-    local dirpath=$CPU_PATH/$cpu/cpufreq
-    local governors=$(cat $dirpath/scaling_available_governors)
+    cpu=$1
+    func=$2
+    dirpath=$CPU_PATH/$cpu/cpufreq
+    governors=$(cat $dirpath/scaling_available_governors)
     shift 2
 
     for governor in $governors; do
@@ -124,10 +123,10 @@ for_each_governor() {
 
 for_each_frequency() {
 
-    local cpu=$1
-    local func=$2
-    local dirpath=$CPU_PATH/$cpu/cpufreq
-    local frequencies=$(cat $dirpath/scaling_available_frequencies)
+    cpu=$1
+    func=$2
+    dirpath=$CPU_PATH/$cpu/cpufreq
+    frequencies=$(cat $dirpath/scaling_available_frequencies)
     shift 2
 
     for frequency in $frequencies; do
@@ -139,29 +138,25 @@ for_each_frequency() {
 
 set_governor() {
 
-    local cpu=$1
-    local dirpath=$CPU_PATH/$cpu/cpufreq/scaling_governor
-    local newgov=$2
+    cpu=$1
+    dirpath=$CPU_PATH/$cpu/cpufreq/scaling_governor
+    newgov=$2
 
     echo $newgov > $dirpath
 }
 
 get_governor() {
 
-    local cpu=$1
-    local dirpath=$CPU_PATH/$cpu/cpufreq/scaling_governor
+    cpu=$1
+    dirpath=$CPU_PATH/$cpu/cpufreq/scaling_governor
 
     cat $dirpath
 }
 
 wait_latency() {
-    local cpu=$1
-    local dirpath=$CPU_PATH/$cpu/cpufreq
-    local latency=
-    local nrfreq=
-    local sampling_rate=
-    local sleep_time=
-    local gov=$(cat $dirpath/scaling_governor)
+    cpu=$1
+    dirpath=$CPU_PATH/$cpu/cpufreq
+    gov=$(cat $dirpath/scaling_governor)
 
     # consider per-policy governor case
     if [ -e $CPU_PATH/$cpu/cpufreq/$gov ]; then
@@ -189,9 +184,9 @@ wait_latency() {
 }
 
 frequnit() {
-    local freq=$1
-    local ghz=$(echo "scale=1;($freq / 1000000)" | bc -l)
-    local mhz=$(echo "scale=1;($freq / 1000)" | bc -l)
+    freq=$1
+    ghz=$(echo "scale=1;($freq / 1000000)" | bc -l)
+    mhz=$(echo "scale=1;($freq / 1000)" | bc -l)
 
     res=$(echo "($ghz > 1.0)" | bc -l)
     if [ "$res" = "1" ]; then
@@ -210,36 +205,36 @@ frequnit() {
 
 set_frequency() {
 
-    local cpu=$1
-    local dirpath=$CPU_PATH/$cpu/cpufreq
-    local newfreq=$2
-    local setfreqpath=$dirpath/scaling_setspeed
+    cpu=$1
+    dirpath=$CPU_PATH/$cpu/cpufreq
+    newfreq=$2
+    setfreqpath=$dirpath/scaling_setspeed
 
     echo $newfreq > $setfreqpath
     wait_latency $cpu
 }
 
 get_frequency() {
-    local cpu=$1
-    local dirpath=$CPU_PATH/$cpu/cpufreq/scaling_cur_freq
+    cpu=$1
+    dirpath=$CPU_PATH/$cpu/cpufreq/scaling_cur_freq
     cat $dirpath
 }
 
 get_max_frequency() {
-    local cpu=$1
-    local dirpath=$CPU_PATH/$cpu/cpufreq/scaling_max_freq
+    cpu=$1
+    dirpath=$CPU_PATH/$cpu/cpufreq/scaling_max_freq
     cat $dirpath
 }
 
 get_min_frequency() {
-    local cpu=$1
-    local dirpath=$CPU_PATH/$cpu/cpufreq/scaling_min_freq
+    cpu=$1
+    dirpath=$CPU_PATH/$cpu/cpufreq/scaling_min_freq
     cat $dirpath
 }
 
 set_online() {
-    local cpu=$1
-    local dirpath=$CPU_PATH/$cpu
+    cpu=$1
+    dirpath=$CPU_PATH/$cpu
 
     if [ "$cpu" = "cpu0" ]; then
 	return 0
@@ -249,8 +244,8 @@ set_online() {
 }
 
 set_offline() {
-    local cpu=$1
-    local dirpath=$CPU_PATH/$cpu
+    cpu=$1
+    dirpath=$CPU_PATH/$cpu
 
     if [ "$cpu" = "cpu0" ]; then
 	return 0
@@ -260,16 +255,16 @@ set_offline() {
 }
 
 get_online() {
-    local cpu=$1
-    local dirpath=$CPU_PATH/$cpu
+    cpu=$1
+    dirpath=$CPU_PATH/$cpu
 
     cat $dirpath/online
 }
 
 check() {
 
-    local descr=$1
-    local func=$2
+    descr=$1
+    func=$2
     shift 2;
 
     log_begin "checking $descr"
@@ -286,15 +281,15 @@ check() {
 }
 
 check_file() {
-    local file=$1
-    local dir=$2
+    file=$1
+    dir=$2
 
     check "'$file' exists in '$dir'" "test -f" $dir/$file
 }
 
 check_cpufreq_files() {
 
-    local dirpath=$CPU_PATH/$1/cpufreq
+    dirpath=$CPU_PATH/$1/cpufreq
     shift 1
 
     for i in $@; do
@@ -306,7 +301,7 @@ check_cpufreq_files() {
 
 check_sched_mc_files() {
 
-    local dirpath=$CPU_PATH
+    dirpath=$CPU_PATH
 
     for i in $@; do
 	check_file $i $dirpath || return 1
@@ -317,7 +312,7 @@ check_sched_mc_files() {
 
 check_topology_files() {
 
-    local dirpath=$CPU_PATH/$1/topology
+    dirpath=$CPU_PATH/$1/topology
     shift 1
 
     for i in $@; do
@@ -329,7 +324,7 @@ check_topology_files() {
 
 check_cpuhotplug_files() {
 
-    local dirpath=$CPU_PATH/$1
+    dirpath=$CPU_PATH/$1
     shift 1
 
     for i in $@; do
@@ -347,8 +342,7 @@ check_cpuhotplug_files() {
 
 save_governors() {
 
-    governors_backup=
-    local index=0
+    index=0
 
     for cpu in $cpus; do
 	governors_backup[$index]=$(cat $CPU_PATH/$cpu/cpufreq/scaling_governor)
@@ -358,8 +352,7 @@ save_governors() {
 
 restore_governors() {
 
-    local index=0
-    local oldgov=
+    index=0
 
     for cpu in $cpus; do
 	oldgov=${governors_backup[$index]}
@@ -370,8 +363,7 @@ restore_governors() {
 
 save_frequencies() {
 
-    frequencies_backup=
-    local index=0
+    index=0
 
     for cpu in $cpus; do
 	frequencies_backup[$index]=$(cat $CPU_PATH/$cpu/cpufreq/scaling_cur_freq)
@@ -381,8 +373,7 @@ save_frequencies() {
 
 restore_frequencies() {
 
-    local index=0
-    local oldfreq=
+    index=0
 
     for cpu in $cpus; do
 	oldfreq=${frequencies_backup[$index]}
@@ -408,7 +399,6 @@ get_os() {
 }
 
 is_root() {
-    local ret
     get_os
     if [ $? -eq 1 ]; then
         # for ubuntu
@@ -421,7 +411,7 @@ is_root() {
 }
 
 is_cpu0_hotplug_allowed() {
-    local status=$1
+    status=$1
 
     if [ $status -eq 1 ]; then
 	return 0

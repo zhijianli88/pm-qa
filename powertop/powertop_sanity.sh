@@ -27,7 +27,7 @@
 
 check_powertop() {
 
-    local bin_name=powertop
+    bin_name=powertop
 
     command -v $bin_name >/dev/null 2>&1 && return 1 || return 0
 }

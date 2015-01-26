@@ -31,11 +31,10 @@ CPUBURN=../utils/cpuburn
 
 check_ondemand() {
 
-    local cpu=$1
-    local maxfreq=$(get_max_frequency $cpu)
-    local minfreq=$(get_min_frequency $cpu)
-    local curfreq=$(get_frequency $cpu)
-    local pid=
+    cpu=$1
+    maxfreq=$(get_max_frequency $cpu)
+    minfreq=$(get_min_frequency $cpu)
+    curfreq=$(get_frequency $cpu)
 
     set_governor $cpu ondemand
 

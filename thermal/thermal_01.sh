@@ -32,8 +32,8 @@ ATTRIBUTES="mode temp type uevent"
 
 check_thermal_zone_attributes() {
 
-    local dirpath=$THERMAL_PATH/$1
-    local zone_name=$1
+    dirpath=$THERMAL_PATH/$1
+    zone_name=$1
     shift 1
     for i in $ATTRIBUTES; do
 	check_file $i $dirpath || return 1
@@ -44,16 +44,16 @@ check_thermal_zone_attributes() {
 
 check_thermal_zone_mode() {
 
-    local dirpath=$THERMAL_PATH/$1
-    local zone_name=$1
+    dirpath=$THERMAL_PATH/$1
+    zone_name=$1
     shift 1
-    local prev_mode=$(cat $dirpath/mode)
+    prev_mode=$(cat $dirpath/mode)
     echo -n enabled > $dirpath/mode
-    local cur_mode=$(cat $dirpath/mode)
+    cur_mode=$(cat $dirpath/mode)
     check "$zone_name cur_mode=$cur_mode"\
 			 "test $cur_mode = enabled" || return 1
     echo -n disabled > $dirpath/mode
-    local cur_mode=$(cat $dirpath/mode)
+    cur_mode=$(cat $dirpath/mode)
     check "$zone_name cur_mode=$cur_mode"\
 			"test $cur_mode = disabled" || return 1
 
@@ -62,7 +62,7 @@ check_thermal_zone_mode() {
 
 check_thermal_zone_trip_level() {
 
-    local all_zones=$(ls $THERMAL_PATH | grep "thermal_zone['$MAX_ZONE']")
+    all_zones=$(ls $THERMAL_PATH | grep "thermal_zone['$MAX_ZONE']")
     for i in $all_zones; do
 	for_each_trip_point_of_zone $i "validate_trip_level" || return 1
     done
@@ -70,7 +70,7 @@ check_thermal_zone_trip_level() {
 
 check_thermal_zone_bindings() {
 
-    local all_zones=$(ls $THERMAL_PATH | grep "thermal_zone['$MAX_ZONE']")
+    all_zones=$(ls $THERMAL_PATH | grep "thermal_zone['$MAX_ZONE']")
     for i in $all_zones; do
 	for_each_binding_of_zone $i "validate_trip_bindings" || return 1
     done

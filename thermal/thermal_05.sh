@@ -29,25 +29,25 @@
 . ../include/thermal_functions.sh
 
 verify_cpufreq_cooling_device_action() {
-    local dirpath=$THERMAL_PATH/$1
-    local cdev_name=$1
+    dirpath=$THERMAL_PATH/$1
+    cdev_name=$1
     shift 1
 
-    local cpufreq_cdev=$(cat $dirpath/type)
+    cpufreq_cdev=$(cat $dirpath/type)
     cat $dirpath/type | grep cpufreq
     if [ $? -ne 0  ] ; then
         log_skip "Cannot find cpufreq in $cdev_name..."
 	    return 0
     fi
 
-    local max_state=$(cat $dirpath/max_state)
-    local prev_state_val=$(cat $dirpath/cur_state)
+    max_state=$(cat $dirpath/max_state)
+    prev_state_val=$(cat $dirpath/cur_state)
     disable_all_thermal_zones
 
-    local count=1
-    local before_scale_max=0
-    local after_scale_max=0
-    local change=0
+    count=1
+    before_scale_max=0
+    after_scale_max=0
+    change=0
 
     while (test $count -le $max_state); do
 	echo 0 > $dirpath/cur_state

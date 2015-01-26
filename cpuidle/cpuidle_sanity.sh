@@ -33,7 +33,7 @@ fi
 
 check_cpuidle_sysfs_entry() {
 
-    local dirpath=$CPU_PATH/cpuidle
+    dirpath=$CPU_PATH/cpuidle
 
     test -d $dirpath
     if [ $? -ne 0 ]; then

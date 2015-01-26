@@ -29,8 +29,8 @@
 
 check_physical_package_id() {
 
-    local package_id=$CPU_PATH/$1/topology/physical_package_id
-    local val=$(cat $package_id)
+    package_id=$CPU_PATH/$1/topology/physical_package_id
+    val=$(cat $package_id)
 
     check "topology is enabled" "test \"$val\" != \"-1\""
 }

@@ -29,11 +29,11 @@
 
 run_powertop() {
 
-    local bin_path=`command -v powertop`
-    local report=csv
-    local seconds=10
-    local iterations=2
-    local report_name=PowerTOP*.csv
+    bin_path=`command -v powertop`
+    report=csv
+    seconds=10
+    iterations=2
+    report_name=PowerTOP*.csv
 
     # remove old reports if exists
     rm -f $report_name
@@ -44,8 +44,8 @@ run_powertop() {
     end_time=`date +%s`
 
     # check if powertop run for desired time
-    let expected_time="$iterations * $seconds"
-    let actual_time="$end_time - $start_time"
+    expected_time="$iterations * $seconds"
+    actual_time="$end_time - $start_time"
 
     check "if powertop run for $expected_time sec" "test $actual_time -ge $expected_time"
 

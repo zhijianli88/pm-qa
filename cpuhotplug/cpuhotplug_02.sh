@@ -28,9 +28,8 @@
 . ../include/functions.sh
 
 check_state() {
-    local cpu=$1
-    local dirpath=$CPU_PATH/$1
-    local state=
+    cpu=$1
+    dirpath=$CPU_PATH/$1
     shift 1
 
     if [ "$cpu" = "cpu0" ]; then

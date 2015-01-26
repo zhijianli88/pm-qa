@@ -45,17 +45,15 @@ heater_kill() {
 }
 
 check_trip_point_change() {
-    local dirpath=$THERMAL_PATH/$1
-    local zone_name=$1
+    dirpath=$THERMAL_PATH/$1
+    zone_name=$1
     shift 1
 
-    local count=0
-    local cur_temp=0
-    local trip_temp=0
-    local trip_cross=
-    local trip_id=
-    local trip_type=0
-    local trip_type_path=0
+    count=0
+    cur_temp=0
+    trip_temp=0
+    trip_type=0
+    trip_type_path=0
     $CPU_HEAT_BIN &
     cpu_pid=$(ps | grep heat_cpu| awk '{print $1}')
     test -z $cpu_pid && cpu_pid=0
@@ -64,7 +62,7 @@ check_trip_point_change() {
 
     start_glmark2
 
-    local index=0
+    index=0
     for trip in $(ls $dirpath | grep "trip_point_['$MAX_ZONE']_temp"); do
 	trip_cross[$index]=0
 	index=$((index + 1))

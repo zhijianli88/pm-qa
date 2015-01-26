@@ -28,10 +28,9 @@
 . ../include/functions.sh
 
 check_affinity_fails() {
-    local cpu=$1
-    local cpuid=${cpu:3}
-    local dirpath=$CPU_PATH/$1
-    local ret=
+    cpu=$1
+    cpuid=${cpu:3}
+    dirpath=$CPU_PATH/$1
 
     if [ "$cpu" = "cpu0" ]; then
 	is_cpu0_hotplug_allowed $hotplug_allow_cpu0 || return 0

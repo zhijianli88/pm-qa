@@ -29,12 +29,10 @@ CPUBURN=../utils/cpuburn
 . ../include/functions.sh
 
 check_task_migrate() {
-    local cpu=$1
-    local cpuid=${cpu:3}
-    local cpumask=$((1 << cpuid))
-    local dirpath=$CPU_PATH/$1
-    local pid=
-    local ret=
+    cpu=$1
+    cpuid=${cpu:3}
+    cpumask=$((1 << cpuid))
+    dirpath=$CPU_PATH/$1
 
     if [ "$cpu" = "cpu0" ]; then
 	is_cpu0_hotplug_allowed $hotplug_allow_cpu0 || return 0

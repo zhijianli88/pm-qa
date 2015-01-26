@@ -29,13 +29,13 @@
 
 check_frequency() {
 
-    local cpu=$1
-    local newfreq=$2
+    cpu=$1
+    newfreq=$2
 
     shift 2
 
-    local oldgov=$(get_governor $cpu)
-    local oldfreq=$(get_frequency $cpu)
+    oldgov=$(get_governor $cpu)
+    oldfreq=$(get_frequency $cpu)
 
     set_governor $cpu userspace
     set_frequency $cpu $newfreq

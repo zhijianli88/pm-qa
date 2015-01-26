@@ -30,10 +30,8 @@
 CPUBURN=../utils/cpuburn
 
 check_frequency() {
-    local cpu=$1
-    local freq=$2
-    local curfreq=
-    local pid=
+    cpu=$1
+    freq=$2
 
     $CPUBURN $cpu &
     pid=$!
@@ -54,10 +52,10 @@ check_frequency() {
 
 check_userspace() {
 
-    local cpu=$1
-    local maxfreq=$(get_max_frequency $cpu)
-    local minfreq=$(get_min_frequency $cpu)
-    local curfreq=$(get_frequency $cpu)
+    cpu=$1
+    maxfreq=$(get_max_frequency $cpu)
+    minfreq=$(get_min_frequency $cpu)
+    curfreq=$(get_frequency $cpu)
 
     set_governor $cpu userspace
 

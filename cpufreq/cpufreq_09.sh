@@ -31,9 +31,9 @@ CPUBURN=../utils/cpuburn
 
 check_powersave() {
 
-    local cpu=$1
-    local minfreq=$(get_min_frequency $cpu)
-    local curfreq=$(get_frequency $cpu)
+    cpu=$1
+    minfreq=$(get_min_frequency $cpu)
+    curfreq=$(get_frequency $cpu)
 
     set_governor $cpu powersave
 

@@ -29,12 +29,12 @@
 
 check_governor() {
 
-    local cpu=$1
-    local newgov=$2
+    cpu=$1
+    newgov=$2
 
     shift 2
 
-    local oldgov=$(get_governor $cpu)
+    oldgov=$(get_governor $cpu)
 
     set_governor $cpu $newgov
 

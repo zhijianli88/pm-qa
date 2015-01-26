@@ -28,7 +28,7 @@
 . ../include/functions.sh
 
 sanity_check() {
-	local ret=$(cat $CPU_PATH/offline)
+	ret=$(cat $CPU_PATH/offline)
 	if [ -z "$ret" ]; then
 		return 0
 	else

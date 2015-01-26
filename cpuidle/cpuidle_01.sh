@@ -32,7 +32,7 @@ FILES="current_driver current_governor_ro"
 
 check_cpuidle_state_files() {
 
-    local dirpath=$CPU_PATH/$1/cpuidle
+    dirpath=$CPU_PATH/$1/cpuidle
     shift 1
 
     for i in $(ls -d $dirpath/state*); do
@@ -46,7 +46,7 @@ check_cpuidle_state_files() {
 
 check_cpuidle_files() {
 
-    local dirpath=$CPU_PATH/cpuidle
+    dirpath=$CPU_PATH/cpuidle
 
     for i in $FILES; do
 	check_file $i $CPU_PATH/cpuidle || return 1

@@ -32,8 +32,8 @@ CDEV_ATTRIBUTES="cur_state max_state type uevent"
 
 check_cooling_device_attributes() {
 
-    local dirpath=$THERMAL_PATH/$1
-    local cdev_name=$1
+    dirpath=$THERMAL_PATH/$1
+    cdev_name=$1
     shift 1
 
     for i in $CDEV_ATTRIBUTES; do
@@ -43,13 +43,13 @@ check_cooling_device_attributes() {
 }
 
 check_cooling_device_states() {
-    local dirpath=$THERMAL_PATH/$1
-    local cdev_name=$1
+    dirpath=$THERMAL_PATH/$1
+    cdev_name=$1
     shift 1
-    local max_state=$(cat $dirpath/max_state)
-    local prev_state_val=$(cat $dirpath/cur_state)
-    local count=0
-    local cur_state_val=0
+    max_state=$(cat $dirpath/max_state)
+    prev_state_val=$(cat $dirpath/cur_state)
+    count=0
+    cur_state_val=0
     while (test $count -le $max_state); do
 	echo $count > $dirpath/cur_state
 	cur_state_val=$(cat $dirpath/cur_state)

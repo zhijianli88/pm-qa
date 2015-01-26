@@ -39,11 +39,11 @@ heater_kill() {
 }
 
 check_temperature_change() {
-    local dirpath=$THERMAL_PATH/$1
-    local zone_name=$1
+    dirpath=$THERMAL_PATH/$1
+    zone_name=$1
     shift 1
 
-    local init_temp=$(cat $dirpath/temp)
+    init_temp=$(cat $dirpath/temp)
     $CPU_HEAT_BIN &
     cpu_pid=$(ps | grep heat_cpu| awk '{print $1}')
     test -z $cpu_pid && cpu_pid=0
@@ -53,7 +53,7 @@ check_temperature_change() {
     start_glmark2
 
     sleep 5
-    local final_temp=$(cat $dirpath/temp)
+    final_temp=$(cat $dirpath/temp)
     heater_kill
     check "temperature variation with load" "test $final_temp -gt $init_temp"
 }

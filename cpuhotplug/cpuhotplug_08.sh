@@ -36,9 +36,8 @@ function randomize() {
 }
 
 random_stress() {
-    local cpu_present=$(cat /sys/devices/system/cpu/present | cut -d '-' -f 2)
-    local cpurand=$(randomize $cpu_present)
-    local ret=
+    cpu_present=$(cat /sys/devices/system/cpu/present | cut -d '-' -f 2)
+    cpurand=$(randomize $cpu_present)
 
     # randomize will in range "1-$cpu_present) so cpu0 is ignored
     set_offline cpu$cpurand

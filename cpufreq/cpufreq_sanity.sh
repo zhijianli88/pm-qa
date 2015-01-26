@@ -33,7 +33,7 @@ fi
 
 check_cpufreq_sysfs_entry() {
 
-    local dirpath=$CPU_PATH/cpufreq
+    dirpath=$CPU_PATH/cpufreq
 
     test -d $dirpath
     if [ $? -ne 0 ]; then
