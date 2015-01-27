@@ -44,7 +44,7 @@ check_frequency() {
     curfreq=$(get_frequency $cpu)
     kill $pid
 
-    check "'userspace' $(frequnit $freq) is fixed" "test \"$curfreq\" == \"$freq\""
+    check "'userspace' $(frequnit $freq) is fixed" "test \"$curfreq\" = \"$freq\""
     if [ "$?" != "0" ]; then
 	return 1
     fi

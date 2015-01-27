@@ -40,7 +40,7 @@ check_frequency() {
     set_governor $cpu userspace
     set_frequency $cpu $newfreq
 
-    check "setting frequency '$(frequnit $newfreq)'" "test \"$(get_frequency $cpu)\" == \"$newfreq\""
+    check "setting frequency '$(frequnit $newfreq)'" "test \"$(get_frequency $cpu)\" = \"$newfreq\""
 
     set_frequency $cpu $oldfreq
     set_governor $cpu $oldgov

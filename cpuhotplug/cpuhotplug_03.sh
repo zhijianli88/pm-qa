@@ -33,7 +33,7 @@ check_affinity_fails() {
     local dirpath=$CPU_PATH/$1
     local ret=
 
-    if [ "$cpu" == "cpu0" ]; then
+    if [ "$cpu" = "cpu0" ]; then
 	is_cpu0_hotplug_allowed $hotplug_allow_cpu0 || return 0
     fi
 

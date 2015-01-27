@@ -50,9 +50,9 @@ test_status_show() {
     fi
 
     echo " "
-    if [[ "$test_script_status" == "fail" ]]; then
+    if [ "$test_script_status" = "fail" ]; then
         echo "$TEST_NAME: fail"
-    elif [[ "$test_script_status" == "skip" ]]; then
+    elif [ "$test_script_status" = "skip" ]; then
         echo "$TEST_NAME: skip"
     else
         echo "$TEST_NAME: pass"
@@ -79,9 +79,9 @@ log_begin() {
 log_end() {
     printf "$*\n"
 
-    if [[ "$*" == "Err" ]]; then
+    if [ "$*" = "Err" ]; then
         fail_count=$((fail_count + 1))
-    elif [[ "$*" == "skip" ]]; then
+    elif [ "$*" = "skip" ]; then
         skip_count=$((skip_count + 1))
     else
         pass_count=$((pass_count + 1))

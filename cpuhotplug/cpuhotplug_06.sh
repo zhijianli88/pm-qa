@@ -32,7 +32,7 @@ check_procinfo() {
     local cpuid=${cpu:3}
     local ret=
 
-    if [ "$cpu" == "cpu0" ]; then
+    if [ "$cpu" = "cpu0" ]; then
 	is_cpu0_hotplug_allowed $hotplug_allow_cpu0 || return 0
     fi
 

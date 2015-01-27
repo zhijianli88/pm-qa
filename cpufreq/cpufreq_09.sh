@@ -40,7 +40,7 @@ check_powersave() {
     wait_latency $cpu
     curfreq=$(get_frequency $cpu)
 
-    check "'powersave' sets frequency to $(frequnit $minfreq)" "test \"$curfreq\" == \"$minfreq\""
+    check "'powersave' sets frequency to $(frequnit $minfreq)" "test \"$curfreq\" = \"$minfreq\""
     if [ "$?" != "0" ]; then
 	return 1
     fi
@@ -52,7 +52,7 @@ check_powersave() {
     curfreq=$(get_frequency $cpu)
     kill $pid
 
-    check "'powersave' frequency $(frequnit $minfreq) is fixed" "test \"$curfreq\" == \"$minfreq\""
+    check "'powersave' frequency $(frequnit $minfreq) is fixed" "test \"$curfreq\" = \"$minfreq\""
     if [ "$?" -ne "0" ]; then
 	return 1
     fi

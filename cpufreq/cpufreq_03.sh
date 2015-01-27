@@ -38,7 +38,7 @@ check_governor() {
 
     set_governor $cpu $newgov
 
-    check "governor change to '$newgov'" "test \"$(get_governor $cpu)\" == \"$newgov\""
+    check "governor change to '$newgov'" "test \"$(get_governor $cpu)\" = \"$newgov\""
 
     set_governor $cpu $oldgov
 }
