@@ -30,7 +30,7 @@ TMPFILE=cpuhotplug_07.tmp
 
 check_notification() {
     cpu=$1
-    cpuid=${cpu:3}
+    cpuid=$(echo $cpu | awk '{print substr($0,4)}')
 
     if [ "$cpu" = "cpu0" ]; then
 	is_cpu0_hotplug_allowed $hotplug_allow_cpu0 || return 0

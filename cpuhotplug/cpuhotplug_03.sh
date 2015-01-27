@@ -29,7 +29,7 @@
 
 check_affinity_fails() {
     cpu=$1
-    cpuid=${cpu:3}
+    cpuid=$(echo $cpu | awk '{print substr($0,4)}')
     dirpath=$CPU_PATH/$1
 
     if [ "$cpu" = "cpu0" ]; then

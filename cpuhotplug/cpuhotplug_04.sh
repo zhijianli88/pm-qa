@@ -30,7 +30,7 @@ CPUBURN=../utils/cpuburn
 
 check_task_migrate() {
     cpu=$1
-    cpuid=${cpu:3}
+    cpuid=$(echo $cpu | awk '{print substr($0,4)}')
     cpumask=$((1 << cpuid))
     dirpath=$CPU_PATH/$1
 
