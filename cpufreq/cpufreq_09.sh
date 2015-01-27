@@ -68,7 +68,7 @@ if [ -z "$supported" ]; then
     return 0
 fi
 
-trap "restore_governors; sigtrap" SIGHUP SIGINT SIGTERM
+trap "restore_governors; sigtrap" HUP INT TERM
 
 for_each_cpu check_powersave
 

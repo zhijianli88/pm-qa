@@ -29,7 +29,7 @@
 
 save_governors
 
-trap restore_governors SIGHUP SIGINT SIGTERM
+trap restore_governors HUP INT TERM
 
 switch_ondemand() {
     local cpu=$1

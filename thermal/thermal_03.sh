@@ -58,7 +58,7 @@ check_temperature_change() {
     check "temperature variation with load" "test $final_temp -gt $init_temp"
 }
 
-trap "heater_kill; sigtrap" SIGHUP SIGINT SIGTERM
+trap "heater_kill; sigtrap" HUP INT TERM
 
 for_each_thermal_zone check_temperature_change
 test_status_show

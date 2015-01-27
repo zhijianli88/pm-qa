@@ -100,7 +100,7 @@ check_trip_point_change() {
     heater_kill
 }
 
-trap "heater_kill; sigtrap" SIGHUP SIGINT SIGTERM
+trap "heater_kill; sigtrap" HUP INT TERM
 
 for_each_thermal_zone check_trip_point_change
 test_status_show

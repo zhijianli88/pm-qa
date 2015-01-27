@@ -49,7 +49,7 @@ check_cpuidle_kill() {
     check "cpuidle program runs successfully (120 secs)" "./$CPUIDLE_KILLER"
 }
 
-trap "restore_cpus; sigtrap" SIGHUP SIGINT SIGTERM
+trap "restore_cpus; sigtrap" HUP INT TERM
 
 for_each_cpu check_cpuidle_kill
 restore_cpus

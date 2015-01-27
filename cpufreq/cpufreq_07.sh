@@ -79,7 +79,7 @@ fi
 
 save_governors
 
-trap "restore_governors; sigtrap" SIGHUP SIGINT SIGTERM
+trap "restore_governors; sigtrap" HUP INT TERM
 
 for_each_cpu check_ondemand
 

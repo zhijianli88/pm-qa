@@ -75,7 +75,7 @@ verify_cooling_device_temp_change() {
     echo $prev_state_val > $dirpath/cur_state
 }
 
-trap "heater_kill; sigtrap" SIGHUP SIGINT SIGTERM
+trap "heater_kill; sigtrap" HUP INT TERM
 
 set_thermal_governors user_space
 

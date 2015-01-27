@@ -110,7 +110,7 @@ fi
 save_governors
 save_frequencies
 
-trap "restore_frequencies; restore_governors; sigtrap" SIGHUP SIGINT SIGTERM
+trap "restore_frequencies; restore_governors; sigtrap" HUP INT TERM
 
 for_each_cpu check_deviation
 
