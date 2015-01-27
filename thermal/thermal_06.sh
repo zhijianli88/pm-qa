@@ -28,11 +28,6 @@
 . ../include/functions.sh
 . ../include/thermal_functions.sh
 
-if [ "$thermal_try_max" -eq 0 ]; then
-    log_skip "test of trip points being crossed"
-    return 0
-fi
-
 TEST_LOOP=100
 CPU_HEAT_BIN=../utils/heat_cpu
 cpu_pid=0
