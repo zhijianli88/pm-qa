@@ -29,7 +29,8 @@
 
 CPUIDLE_KILLER=./cpuidle_killer
 
-if [ $(id -u) -ne 0 ]; then
+is_root
+if [ $? -ne 0 ]; then
     log_skip "run as non-root"
     exit 0
 fi
