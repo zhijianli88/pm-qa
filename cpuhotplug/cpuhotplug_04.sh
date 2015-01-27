@@ -32,7 +32,6 @@ check_task_migrate() {
     cpu=$1
     cpuid=$(echo $cpu | awk '{print substr($0,4)}')
     cpumask=$((1 << cpuid))
-    dirpath=$CPU_PATH/$1
 
     if [ "$cpu" = "cpu0" ]; then
 	is_cpu0_hotplug_allowed $hotplug_allow_cpu0 || return 0

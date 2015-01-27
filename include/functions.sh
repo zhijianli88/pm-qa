@@ -95,13 +95,13 @@ log_skip() {
 
 for_each_cpu() {
 
-    func=$1
+    cpu_func=$1
     shift 1
 
     for cpu in $cpus; do
 	INC=0
 	CPU=/$cpu
-	$func $cpu $@
+	$cpu_func $cpu $@
     done
 
     return 0
@@ -109,14 +109,14 @@ for_each_cpu() {
 
 for_each_governor() {
 
-    cpu=$1
-    func=$2
-    dirpath=$CPU_PATH/$cpu/cpufreq
-    governors=$(cat $dirpath/scaling_available_governors)
+    gov_cpu=$1
+    gov_func=$2
+    cpufreq_dirpath=$CPU_PATH/$gov_cpu/cpufreq
+    governors=$(cat $cpufreq_dirpath/scaling_available_governors)
     shift 2
 
     for governor in $governors; do
-	$func $cpu $governor $@
+	$gov_func $gov_cpu $governor $@
     done
 
     return 0
@@ -124,14 +124,14 @@ for_each_governor() {
 
 for_each_frequency() {
 
-    cpu=$1
-    func=$2
-    dirpath=$CPU_PATH/$cpu/cpufreq
-    frequencies=$(cat $dirpath/scaling_available_frequencies)
+    freq_cpu=$1
+    freq_func=$2
+    cpufreq_dirpath=$CPU_PATH/$freq_cpu/cpufreq
+    frequencies=$(cat $cpufreq_dirpath/scaling_available_frequencies)
     shift 2
 
     for frequency in $frequencies; do
-	$func $cpu $frequency $@
+	$freq_func $freq_cpu $frequency $@
     done
 
     return 0
@@ -139,40 +139,40 @@ for_each_frequency() {
 
 set_governor() {
 
-    cpu=$1
-    dirpath=$CPU_PATH/$cpu/cpufreq/scaling_governor
+    gov_cpu=$1
+    scaling_gov_dirpath=$CPU_PATH/$gov_cpu/cpufreq/scaling_governor
     newgov=$2
 
-    echo $newgov > $dirpath
+    echo $newgov > $scaling_gov_dirpath
 }
 
 get_governor() {
 
-    cpu=$1
-    dirpath=$CPU_PATH/$cpu/cpufreq/scaling_governor
+    gov_cpu=$1
+    scaling_gov_dirpath=$CPU_PATH/$gov_cpu/cpufreq/scaling_governor
 
-    cat $dirpath
+    cat $scaling_gov_dirpath
 }
 
 wait_latency() {
-    cpu=$1
-    dirpath=$CPU_PATH/$cpu/cpufreq
-    gov=$(cat $dirpath/scaling_governor)
+    wait_latency_cpu=$1
+    cpufreq_dirpath=$CPU_PATH/$wait_latency_cpu/cpufreq
+    gov=$(cat $cpufreq_dirpath/scaling_governor)
 
     # consider per-policy governor case
-    if [ -e $CPU_PATH/$cpu/cpufreq/$gov ]; then
-	sampling_rate=$(cat $CPU_PATH/$cpu/cpufreq/$gov/sampling_rate)
+    if [ -e $CPU_PATH/$wait_latency_cpu/cpufreq/$gov ]; then
+	sampling_rate=$(cat $CPU_PATH/$wait_latency_cpu/cpufreq/$gov/sampling_rate)
     else
         sampling_rate=$(cat $CPU_PATH/cpufreq/$gov/sampling_rate)
     fi
     sampling_rate=$((sampling_rate * 1000)) # unit nsec
 
-    latency=$(cat $dirpath/cpuinfo_transition_latency)
+    latency=$(cat $cpufreq_dirpath/cpuinfo_transition_latency)
     if [ $? -ne 0 ]; then
 	return 1
     fi
 
-    nrfreq=$(cat $dirpath/scaling_available_frequencies | wc -w)
+    nrfreq=$(cat $cpufreq_dirpath/scaling_available_frequencies | wc -w)
     if [ $? -ne 0 ]; then
 	return 1
     fi
@@ -189,14 +189,14 @@ frequnit() {
     ghz=$(echo "scale=1;($freq / 1000000)" | bc -l)
     mhz=$(echo "scale=1;($freq / 1000)" | bc -l)
 
-    res=$(echo "($ghz > 1.0)" | bc -l)
-    if [ "$res" = "1" ]; then
+    ghz_value=$(echo "($ghz > 1.0)" | bc -l)
+    if [ "$ghz_value" = "1" ]; then
 	echo $ghz GHz
 	return 0
     fi
 
-    res=$(echo "($mhz > 1.0)" | bc -l)
-    if [ "$res" = "1" ];then
+    mhz_value=$(echo "($mhz > 1.0)" | bc -l)
+    if [ "$mhz_value" = "1" ];then
 	echo $mhz MHz
 	return 0
     fi
@@ -206,71 +206,71 @@ frequnit() {
 
 set_frequency() {
 
-    cpu=$1
-    dirpath=$CPU_PATH/$cpu/cpufreq
+    freq_cpu=$1
+    cpufreq_dirpath=$CPU_PATH/$freq_cpu/cpufreq
     newfreq=$2
-    setfreqpath=$dirpath/scaling_setspeed
+    setfreqpath=$cpufreq_dirpath/scaling_setspeed
 
     echo $newfreq > $setfreqpath
-    wait_latency $cpu
+    wait_latency $freq_cpu
 }
 
 get_frequency() {
-    cpu=$1
-    dirpath=$CPU_PATH/$cpu/cpufreq/scaling_cur_freq
-    cat $dirpath
+    freq_cpu=$1
+    scaling_cur_freq=$CPU_PATH/$freq_cpu/cpufreq/scaling_cur_freq
+    cat $scaling_cur_freq
 }
 
 get_max_frequency() {
-    cpu=$1
-    dirpath=$CPU_PATH/$cpu/cpufreq/scaling_max_freq
-    cat $dirpath
+    freq_cpu=$1
+    scaling_max_freq=$CPU_PATH/$freq_cpu/cpufreq/scaling_max_freq
+    cat $scaling_max_freq
 }
 
 get_min_frequency() {
-    cpu=$1
-    dirpath=$CPU_PATH/$cpu/cpufreq/scaling_min_freq
-    cat $dirpath
+    freq_cpu=$1
+    scaling_min_freq=$CPU_PATH/$freq_cpu/cpufreq/scaling_min_freq
+    cat $scaling_min_freq
 }
 
 set_online() {
-    cpu=$1
-    dirpath=$CPU_PATH/$cpu
+    current_cpu=$1
+    current_cpu_path=$CPU_PATH/$current_cpu
 
-    if [ "$cpu" = "cpu0" ]; then
+    if [ "$current_cpu" = "cpu0" ]; then
 	return 0
     fi
 
-    echo 1 > $dirpath/online
+    echo 1 > $current_cpu_path/online
 }
 
 set_offline() {
-    cpu=$1
-    dirpath=$CPU_PATH/$cpu
+    current_cpu=$1
+    current_cpu_path=$CPU_PATH/$current_cpu
 
-    if [ "$cpu" = "cpu0" ]; then
+    if [ "$current_cpu" = "cpu0" ]; then
 	return 0
     fi
 
-    echo 0 > $dirpath/online
+    echo 0 > $current_cpu_path/online
 }
 
 get_online() {
-    cpu=$1
-    dirpath=$CPU_PATH/$cpu
+    current_cpu=$1
+    current_cpu_path=$CPU_PATH/$current_cpu
 
-    cat $dirpath/online
+    cat $current_cpu_path/online
 }
 
 check() {
 
-    descr=$1
-    func=$2
+    check_descr=$1
+    check_func=$2
     shift 2;
 
-    log_begin "checking $descr"
+    log_begin "checking $check_descr"
 
-    $func $@
+    $check_func $@
     if [ $? -ne 0 ]; then
 	log_end "Err"
 	return 1
@@ -289,12 +289,12 @@ check_file() {
 }
 
 check_cpufreq_files() {
-
-    dirpath=$CPU_PATH/$1/cpufreq
+    cpu_id=$1
+    cpufreq_files_dir=$CPU_PATH/$cpu_id/cpufreq
     shift 1
 
     for i in $@; do
-	check_file $i $dirpath || return 1
+	check_file $i $cpufreq_files_dir || return 1
     done
 
     return 0
@@ -302,22 +302,20 @@ check_cpufreq_files() {
 
 check_sched_mc_files() {
 
-    dirpath=$CPU_PATH
-
     for i in $@; do
-	check_file $i $dirpath || return 1
+	check_file $i $CPU_PATH || return 1
     done
 
     return 0
 }
 
 check_topology_files() {
-
-    dirpath=$CPU_PATH/$1/topology
+    cpu=$1
+    topology_files_dir=$CPU_PATH/$cpu/topology
     shift 1
 
     for i in $@; do
-	check_file $i $dirpath || return 1
+	check_file $i $topology_files_dir || return 1
     done
 
     return 0
@@ -325,17 +323,17 @@ check_topology_files() {
 
 check_cpuhotplug_files() {
 
-    dirpath=$CPU_PATH/$1
+    cpuhotplug_files_dir=$CPU_PATH/$1
     shift 1
 
     for i in $@; do
-	if [ `echo $dirpath | grep -c "cpu0"` -eq 1 ]; then
+	if [ `echo $cpuhotplug_files_dir | grep -c "cpu0"` -eq 1 ]; then
         	if [ $hotplug_allow_cpu0 -eq 0 ]; then
 			continue
 		fi
 	fi
 
-	check_file $i $dirpath || return 1
+	check_file $i $cpuhotplug_files_dir || return 1
     done
 
     return 0

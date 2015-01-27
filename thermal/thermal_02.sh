@@ -31,33 +31,32 @@
 CDEV_ATTRIBUTES="cur_state max_state type uevent"
 
 check_cooling_device_attributes() {
-
-    dirpath=$THERMAL_PATH/$1
     cdev_name=$1
+    cdev_name_dir=$THERMAL_PATH/$cdev_name
     shift 1
 
-    for i in $CDEV_ATTRIBUTES; do
-	check_file $i $dirpath || return 1
+    for attribute in $CDEV_ATTRIBUTES; do
+	check_file $attribute $cdev_name_dir || return 1
     done
 
 }
 
 check_cooling_device_states() {
-    dirpath=$THERMAL_PATH/$1
     cdev_name=$1
+    cdev_name_dir=$THERMAL_PATH/$cdev_name
     shift 1
-    max_state=$(cat $dirpath/max_state)
-    prev_state_val=$(cat $dirpath/cur_state)
+    max_state=$(cat $cdev_name_dir/max_state)
+    prev_state_val=$(cat $cdev_name_dir/cur_state)
     count=0
     cur_state_val=0
     while (test $count -le $max_state); do
-	echo $count > $dirpath/cur_state
-	cur_state_val=$(cat $dirpath/cur_state)
+	echo $count > $cdev_name_dir/cur_state
+	cur_state_val=$(cat $cdev_name_dir/cur_state)
 	check "$cdev_name cur_state=$count"\
 				"test $cur_state_val -eq $count" || return 1
-	count=$((count+1))
+	count=$((count + 1))
     done
-    echo $prev_state_val > $dirpath/cur_state
+    echo $prev_state_val > $cdev_name_dir/cur_state
 }
 
 set_thermal_governors user_space

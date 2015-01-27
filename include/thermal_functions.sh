@@ -30,13 +30,12 @@ MAX_CDEV=0-50
 check_valid_temp() {
     file=$1
     zone_name=$2
-    dir=$THERMAL_PATH/$2
+    dir=$THERMAL_PATH/$zone_name
 
-    temp_file=$dir/$1
-    func=cat
+    temp_file=$dir/$file
     shift 2;
 
-    temp_val=$($func $temp_file)
+    temp_val=$(cat $temp_file)
     descr="'$zone_name'/'$file' ='$temp_val'"
     log_begin "checking $descr"
 
@@ -52,23 +51,22 @@ check_valid_temp() {
 
 for_each_thermal_zone() {
 
-    func=$1
+    thermal_func=$1
     shift 1
 
-    zones=$(ls $THERMAL_PATH | grep "thermal_zone['$MAX_ZONE']")
+    thermal_zones=$(ls $THERMAL_PATH | grep "thermal_zone['$MAX_ZONE']")
 
-    ALL_ZONE=$zone
-    for zone in $zones; do
+    for thermal_zone in $zones; do
 	INC=0
-	$func $zone $@
+	$thermal_func $thermal_zone $@
     done
 
     return 0
 }
 
 get_total_trip_point_of_zone() {
-
-    zone_path=$THERMAL_PATH/$1
+    zone=$1
+    zone_path=$THERMAL_PATH/$zone
     count=0
     shift 1
     trips=$(ls $zone_path | grep "trip_point_['$MAX_ZONE']_temp")
@@ -113,8 +111,8 @@ for_each_binding_of_zone() {
 check_valid_binding() {
     trip_point=$1
     zone_name=$2
-    dirpath=$THERMAL_PATH/$2
-    temp_file=$2/$1
+    dirpath=$THERMAL_PATH/$zone_name
+    temp_file=$zone_name/$trip_point
     trip_point_val=$(cat $dirpath/$trip_point)
     get_total_trip_point_of_zone $zone_name
     trip_point_max=$?
@@ -134,8 +132,8 @@ check_valid_binding() {
 validate_trip_bindings() {
     zone_name=$1
     bind_no=$2
-    dirpath=$THERMAL_PATH/$1
-    trip_point=cdev$2_trip_point
+    dirpath=$THERMAL_PATH/$zone_name
+    trip_point=cdev"$bind_no"_trip_point
     shift 2
 
     check_file $trip_point $dirpath || return 1
@@ -145,9 +143,9 @@ validate_trip_bindings() {
 validate_trip_level() {
     zone_name=$1
     trip_no=$2
-    dirpath=$THERMAL_PATH/$1
-    trip_temp=trip_point_$2_temp
-    trip_type=trip_point_$2_type
+    dirpath=$THERMAL_PATH/$zone_name
+    trip_temp=trip_point_"$trip_no"_temp
+    trip_type=trip_point_"$trip_no"_type
     shift 2
 
     check_file $trip_temp $dirpath || return 1
@@ -157,19 +155,18 @@ validate_trip_level() {
 
 for_each_cooling_device() {
 
-    func=$1
+    cdev_func=$1
     shift 1
 
-    devices=$(ls $THERMAL_PATH | grep "cooling_device['$MAX_CDEV']")
-    if [ "$devices" = "" ]; then
+    cooling_devices=$(ls $THERMAL_PATH | grep "cooling_device['$MAX_CDEV']")
+    if [ "$cooling_devices" = "" ]; then
 	log_skip "no cooling devices"
 	return 0
     fi
 
-    ALL_DEVICE=$devices
-    for device in $devices; do
+    for cooling_device in $cooling_devices; do
 	INC=0
-	$func $device $@
+	$cdev_func $cooling_device $@
     done
 
     return 0

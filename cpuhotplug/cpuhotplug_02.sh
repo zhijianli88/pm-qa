@@ -29,7 +29,7 @@
 
 check_state() {
     cpu=$1
-    dirpath=$CPU_PATH/$1
+    dirpath=$CPU_PATH/$cpu
     shift 1
 
     if [ "$cpu" = "cpu0" ]; then
@@ -39,7 +39,7 @@ check_state() {
     set_offline $cpu
     state=$(get_online $cpu)
 
-    check "cpu is offline" "test $state -eq 0"
+    check "$cpu is offline" "test $state -eq 0"
     if [ $? -ne 0 ]; then
 	set_online $cpu
 	return 1
@@ -48,7 +48,7 @@ check_state() {
     set_online $cpu
     state=$(get_online $cpu)
 
-    check "cpu is online" "test $state -eq 1"
+    check "$cpu is online" "test $state -eq 1"
     if [ $? -ne 0 ]; then
 	return 1
     fi

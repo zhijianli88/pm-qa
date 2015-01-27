@@ -30,7 +30,6 @@
 check_affinity_fails() {
     cpu=$1
     cpuid=$(echo $cpu | awk '{print substr($0,4)}')
-    dirpath=$CPU_PATH/$1
 
     if [ "$cpu" = "cpu0" ]; then
 	is_cpu0_hotplug_allowed $hotplug_allow_cpu0 || return 0
@@ -38,9 +37,9 @@ check_affinity_fails() {
 
     set_offline $cpu
 
-    taskset -c $cpuid /bin/true
+    taskset -c $cpuid /bin/true 2> /dev/null
     ret=$?
-    check "setting affinity on cpu fails" "test $ret -ne 0"
+    check "setting affinity on $cpu fails" "test $ret -ne 0"
 
     set_online $cpu
 
