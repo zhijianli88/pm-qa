@@ -27,12 +27,15 @@
 
 . ../include/functions.sh
 
-function randomize() {
+randomize() {
+    random=$(od -A n -N 2 -t u2 /dev/urandom)
+    number=$(echo $random % $1)
+
     if [ $hotplug_allow_cpu0 -eq 0 ]; then
-   	echo $[ ( $RANDOM % $1 )  + 1 ]
-    else
-	echo $[ ( $RANDOM % $1 ) ]
+        number=$(($number + 1))
     fi
+
+    echo $number
 }
 
 random_stress() {
