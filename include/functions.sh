@@ -34,6 +34,7 @@ pass_count=0
 fail_count=0
 skip_count=0
 test_script_status="pass"
+NANOSLEEP="../utils/nanosleep"
 
 test_status_show() {
     if [ $fail_count -ne 0 ]; then
@@ -180,7 +181,7 @@ wait_latency() {
 
     sleep_time=$(($latency + $sampling_rate))
 
-    ../utils/nanosleep $(($nrfreq * $sleep_time))
+    $NANOSLEEP $(($nrfreq * $sleep_time))
 }
 
 frequnit() {

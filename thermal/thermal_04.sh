@@ -54,7 +54,7 @@ verify_cooling_device_temp_change() {
     init_temp=0
     final_temp=0
     cool_temp=0
-    ./$HEAT_CPU_MODERATE moderate &
+    $HEAT_CPU_MODERATE moderate &
     pid=$!
     test $pid -eq 0 && return
 

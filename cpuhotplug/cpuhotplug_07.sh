@@ -27,6 +27,7 @@
 
 . ../include/functions.sh
 TMPFILE=cpuhotplug_07.tmp
+UEVENT_READER="../utils/uevent_reader"
 
 check_notification() {
     cpu=$1
@@ -38,8 +39,9 @@ check_notification() {
 
     # damn ! udevadm is buffering the output, we have to use a temp file
     # to retrieve the output
+
     rm -f $TMPFILE
-    ../utils/uevent_reader $TMPFILE &
+    $UEVENT_READER $TMPFILE &
     pid=$!
     sleep 1
 
