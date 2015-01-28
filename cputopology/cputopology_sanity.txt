@@ -1,0 +1,1 @@
+Checking for topology dir in each cpu
