@@ -41,9 +41,6 @@ check_powersave() {
     curfreq=$(get_frequency $cpu)
 
     check "'powersave' sets frequency to $(frequnit $minfreq)" "test \"$curfreq\" = \"$minfreq\""
-    if [ "$?" != "0" ]; then
-	return 1
-    fi
 
     $CPUBURN $cpu &
     pid=$!
@@ -53,9 +50,6 @@ check_powersave() {
     kill $pid
 
     check "'powersave' frequency $(frequnit $minfreq) is fixed" "test \"$curfreq\" = \"$minfreq\""
-    if [ "$?" -ne "0" ]; then
-	return 1
-    fi
 
     return 0
 }

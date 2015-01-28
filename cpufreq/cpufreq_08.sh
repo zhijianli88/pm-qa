@@ -43,9 +43,6 @@ check_frequency() {
     kill $pid
 
     check "'userspace' $(frequnit $freq) is fixed" "test \"$curfreq\" = \"$freq\""
-    if [ "$?" != "0" ]; then
-	return 1
-    fi
 
     return 0
 }
