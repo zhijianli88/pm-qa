@@ -14,7 +14,7 @@ define $(module_name)_add_executable
     include $(BUILD_PREBUILT)
 endef
 
-test_num := sanity 01 02 03 04 05 06 07 08
+test_num := sanity 00 01 02 03 04 05 06 07 08 99
 $(foreach item,$(test_num),$(eval $(call $(module_name)_add_executable, $(module_name)_$(item))))
 
 define $(module_name)_etc_add_executable
@@ -28,5 +28,3 @@ define $(module_name)_etc_add_executable
     include $(BUILD_PREBUILT)
 endef
 
-test_names := 1_sanity_check z_sanity_check 
-$(foreach item,$(test_names),$(eval $(call $(module_name)_etc_add_executable, $(item))))
