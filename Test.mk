@@ -22,7 +22,7 @@
 #       - initial API and implementation
 
 SNT=$(wildcard *sanity.sh)
-TST=$(wildcard *[^{sanity}].sh)
+TST=$(sort $(wildcard *[!{sanity}].sh))
 LOG=$(TST:.sh=.log)
 CFLAGS?=-g -Wall -pthread
 CC?=gcc
