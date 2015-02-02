@@ -31,6 +31,7 @@
 TEST_LOOP=100
 CPU_HEAT_BIN=../utils/heat_cpu
 cpu_pid=0
+trip_cross_array="trip_cross"
 
 heater_kill() {
     if [ $cpu_pid -ne 0 ]; then
@@ -40,8 +41,8 @@ heater_kill() {
 }
 
 check_trip_point_change() {
-    dirpath=$THERMAL_PATH/$1
     zone_name=$1
+    dirpath=$THERMAL_PATH/$zone_name
     shift 1
 
     count=0
@@ -58,36 +59,50 @@ check_trip_point_change() {
     start_glmark2
 
     index=0
-    for trip in $(ls $dirpath | grep "trip_point_['$MAX_ZONE']_temp"); do
-	trip_cross[$index]=0
-	index=$((index + 1))
+
+    trip_point_temps=$(ls $thermal_zone_path | grep "trip_point_['$MAX_ZONE']_temp")
+
+    for trip in $trip_point_temps; do
+        trip_value=0
+        eval $trip_cross_array$index=$trip_value
+        eval export $trip_cross_array$index
+        index=$((index + 1))
     done
+
     while (test $count -lt $TEST_LOOP); do
-	index=0
-	sleep 1
-	for trip in $(ls $dirpath | grep "trip_point_['$MAX_ZONE']_temp"); do
-	    cur_temp=$(cat $dirpath/temp)
-	    trip_temp=$(cat $dirpath/$trip)
-	    if [ $cur_temp -gt $trip_temp ]; then
-	        trip_cross[$index]=$((${trip_cross[$index]} + 1))
- 	    fi
-	    index=$((index + 1))
+	    index=0
+	    sleep 1
 
-	done
-	count=$((count + 1))
+        for trip in $trip_point_temps; do
+            cur_temp=$(cat $thermal_zone_path/temp)
+            trip_temp=$(cat $thermal_zone_path/$trip)
+	    
+            if [ $cur_temp -gt $trip_temp ]; then
+                value=$(eval echo \$$trip_cross_array$index)
+                value=$((value + 1))
+                eval $trip_cross_array$index=$value
+                eval export $trip_cross_array$index
+            fi
+
+            index=$((index + 1))
+	    done
+
+	    count=$((count + 1))
     done
-    index=0
-    for trip in $(ls $dirpath | grep "trip_point_['$MAX_ZONE']_temp"); do
-	get_trip_id $trip
-	trip_id=$?
-	trip_type=$(cat $dirpath/trip_point_$((trip_id))_type)
-	trip_temp=$(cat $dirpath/$trip)
 
-	if [ $trip_type != "critical" ]; then
-	    count=${trip_cross[$index]}
-	    check "$trip:$trip_temp crossed" "test $count -gt 0"
-	fi
-	index=$((index + 1))
+    index=0
+    for trip in $trip_point_temps; do	
+        get_trip_id $trip
+	    trip_id=$?
+	    trip_type=$(cat $thermal_zone_path/trip_point_"$trip_id"_type)
+        trip_temp=$(cat $thermal_zone_path/$trip)
+
+	    if [ $trip_type != "critical" ]; then
+	        count=$(eval echo \$$trip_cross_array$index)
+	        check "$trip:$trip_temp crossed" "test $count -gt 0"
+	    fi
+	
+        index=$((index + 1))
     done
 
     heater_kill

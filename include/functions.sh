@@ -35,6 +35,8 @@ fail_count=0
 skip_count=0
 test_script_status="pass"
 NANOSLEEP="../utils/nanosleep"
+gov_array="governors_backup"
+freq_array="frequencies_backup"
 
 test_status_show() {
     if [ $fail_count -ne 0 ]; then
@@ -344,8 +346,9 @@ save_governors() {
     index=0
 
     for cpu in $cpus; do
-	governors_backup[$index]=$(cat $CPU_PATH/$cpu/cpufreq/scaling_governor)
-	index=$((index + 1))
+        scaling_gov_value=$(cat $CPU_PATH/$cpu/cpufreq/scaling_governor)
+        eval $gov_array$index=$scaling_gov_value
+        eval export $gov_array$index
     done
 }
 
@@ -354,9 +357,9 @@ restore_governors() {
     index=0
 
     for cpu in $cpus; do
-	oldgov=${governors_backup[$index]}
-	echo $oldgov > $CPU_PATH/$cpu/cpufreq/scaling_governor
-	index=$((index + 1))
+        oldgov=$(eval echo \$$gov_array$index)
+        echo $oldgov > $CPU_PATH/$cpu/cpufreq/scaling_governor
+        index=$((index + 1))
     done
 }
 
@@ -365,8 +368,9 @@ save_frequencies() {
     index=0
 
     for cpu in $cpus; do
-	frequencies_backup[$index]=$(cat $CPU_PATH/$cpu/cpufreq/scaling_cur_freq)
-	index=$((index + 1))
+        freq_value=$(cat $CPU_PATH/$cpu/cpufreq/scaling_cur_freq)
+        eval $freq_array$index=$freq_value
+        eval export $freq_array$index
     done
 }
 
@@ -375,7 +379,7 @@ restore_frequencies() {
     index=0
 
     for cpu in $cpus; do
-	oldfreq=${frequencies_backup[$index]}
+	oldfreq=$(eval echo \$$freq_array$index)
 	echo $oldfreq > $CPU_PATH/$cpu/cpufreq/scaling_setspeed
 	index=$((index + 1))
     done

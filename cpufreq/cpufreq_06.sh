@@ -28,9 +28,10 @@
 . ../include/functions.sh
 
 CPUCYCLE=../utils/cpucycle
+freq_results_array="results"
 
 compute_freq_ratio() {
-
+    index=0
     cpu=$1
     freq=$2
 
@@ -41,13 +42,17 @@ compute_freq_ratio() {
 	return 1
     fi
 
-    results[$index]=$(echo "scale=3;($result / $freq)" | bc -l)
+    value=$(echo "scale=3;($result / $freq)" | bc -l)
+    eval $freq_results_array$index=$value
+    eval export $freq_results_array$index     
     index=$((index + 1))
 }
 
 compute_freq_ratio_sum() {
+    index=0
+    sum=0
 
-    res=${results[$index]}
+    res=$(eval echo \$$freq_results_array$index)
     sum=$(echo "($sum + $res)" | bc -l)
     index=$((index + 1))
 
@@ -55,7 +60,7 @@ compute_freq_ratio_sum() {
 
 __check_freq_deviation() {
 
-    res=${results[$index]}
+    res=$(eval echo \$$freq_results_array$index)
 
     # compute deviation
     dev=$(echo "scale=3;((( $res - $avg ) / $avg) * 100 )" | bc -l)
@@ -90,14 +95,10 @@ check_deviation() {
 
     for_each_frequency $cpu compute_freq_ratio
 
-    index=0
-    sum=0
-
     for_each_frequency $cpu compute_freq_ratio_sum
 
     avg=$(echo "scale=3;($sum / $index)" | bc -l)
 
-    index=0
     for_each_frequency $cpu check_freq_deviation
 }
 

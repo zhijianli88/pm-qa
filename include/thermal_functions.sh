@@ -26,6 +26,10 @@
 THERMAL_PATH="/sys/devices/virtual/thermal"
 MAX_ZONE=0-12
 MAX_CDEV=0-50
+scaling_freq_array="scaling_freq"
+mode_array="mode_list"
+thermal_gov_array="thermal_governor_backup"
+thermal_zones=$(ls $THERMAL_PATH | grep "thermal_zone['$MAX_ZONE']")
 
 check_valid_temp() {
     file=$1
@@ -54,9 +58,7 @@ for_each_thermal_zone() {
     thermal_func=$1
     shift 1
 
-    thermal_zones=$(ls $THERMAL_PATH | grep "thermal_zone['$MAX_ZONE']")
-
-    for thermal_zone in $zones; do
+    for thermal_zone in $thermal_zones; do
 	INC=0
 	$thermal_func $thermal_zone $@
     done
@@ -180,11 +182,16 @@ check_scaling_freq() {
 
     flag=0
     for cpu in $cpus; do
-	if [ ${before_freq_list[$index]} -ne ${after_freq_list[$index]} ] ; then
-	    flag=1	
-	fi
-        index=$((index + 1)) 
-    done
+        after_freq=$(eval echo \$$after_freq_list$index)
+        before_freq=$(eval echo \$$before_freq_list$index)
+
+        if [ $after_freq -ne $before_freq ]; then
+            flag=1
+        fi
+
+        index=$((index + 1))
+    done    
+
     return $flag
 }
 
@@ -192,9 +199,11 @@ store_scaling_maxfreq() {
     index=0
 
     for cpu in $cpus; do
-	scale_freq[$index]=$(cat $CPU_PATH/$cpu/cpufreq/scaling_max_freq)
-        index=$((index + 1))
+        scaling_freq_max_value=$(cat $CPU_PATH/$cpu/cpufreq/scaling_max_freq)
+        eval $scaling_freq_array$index=$scaling_freq_max_value
+        eval echo $scaling_freq_array$index    
     done
+
     return 0
 }
 
@@ -215,12 +224,14 @@ disable_all_thermal_zones() {
 
     index=0
 
-    th_zones=$(ls $THERMAL_PATH | grep "thermal_zone['$MAX_ZONE']")
-    for zone in $th_zones; do
-	mode_list[$index]=$(cat $THERMAL_PATH/$zone/mode)
+    for thermal_zone in $thermal_zones; do
+        mode=$(cat $THERMAL_PATH/$thermal_zone/mode)
+        eval $mode_array$index=$mode
+        eval export $mode_array$index
         index=$((index + 1))
-	echo -n "disabled" > $THERMAL_PATH/$zone/mode
+        echo -n "disabled" > $THERMAL_PATH/$thermal_zone/mode
     done
+
     return 0
 }
 
@@ -228,11 +239,12 @@ enable_all_thermal_zones() {
 
     index=0
 
-    th_zones=$(ls $THERMAL_PATH | grep "thermal_zone['$MAX_ZONE']")
-    for zone in $th_zones; do
-	echo ${mode_list[$index]} > $THERMAL_PATH/$zone/mode
+    for thermal_zone in $thermal_zones; do
+        mode=$(eval echo \$$mode_array$index)
+        echo $mode > $THERMAL_PATH/$thermal_zone/mode
         index=$((index + 1))
     done
+
     return 0
 }
 
@@ -282,12 +294,14 @@ set_thermal_governors() {
     gov=$1
     index=0
 
-    th_zones=$(ls $THERMAL_PATH | grep "thermal_zone['$MAX_ZONE']")
-    for zone in $th_zones; do
-        thermal_governor_backup[$index]=$(cat $THERMAL_PATH/$zone/policy)
+    for thermal_zone in $thermal_zones; do
+        policy=$(cat $THERMAL_PATH/$thermal_zone/policy)
+        eval $thermal_gov_array$index=$policy
+        eval export $thermal_gov_array$index
         index=$((index + 1))
-        echo $gov > $THERMAL_PATH/$zone/policy
+        echo $gov > $THERMAL_PATH/$thermal_zone/policy
     done
+
     return 0
 }
 
@@ -295,10 +309,11 @@ restore_thermal_governors() {
 
     index=0
 
-    th_zones=$(ls $THERMAL_PATH | grep "thermal_zone['$MAX_ZONE']")
-    for zone in $th_zones; do
-	echo ${thermal_governor_backup[$index]} > $THERMAL_PATH/$zone/policy
+    for thermal_zone in $thermal_zones; do
+        old_policy=$(eval echo \$$thermal_gov_array$index)
+        echo $old_policy > $THERMAL_PATH/$thermal_zone/policy
         index=$((index + 1))
     done
+
     return 0
 }
