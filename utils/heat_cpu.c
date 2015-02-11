@@ -95,7 +95,8 @@ void *do_loop(void *data)
 
 int main(int arg_count, char *argv[])
 {
-	int ret, i;
+	int ret;
+	long i;
 	int num_cpus = sysconf(_SC_NPROCESSORS_ONLN);
 	cpu_set_t cpuset;
 
