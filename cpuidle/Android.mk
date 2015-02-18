@@ -21,7 +21,7 @@ include $(CLEAR_VARS)
 LOCAL_MODULE := cpuidle_killer
 systemtarball: cpuidle_killer
 LOCAL_SRC_FILES:= cpuidle_killer.c
-LOCAL_STATIC_LIBRARIES := libcutils libc 
+LOCAL_SHARED_LIBRARIES := libcutils libc
 LOCAL_MODULE_TAGS := tests
 LOCAL_MODULE_PATH := $(TARGET_OUT_EXECUTABLES)/pm-qa/$(module_name)
 include $(BUILD_EXECUTABLE)
