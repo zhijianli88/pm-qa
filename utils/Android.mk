@@ -9,6 +9,7 @@ define $(module_name)_etc_add_executable
     LOCAL_MODULE_CLASS := tests
     LOCAL_MODULE := $1
     systemtarball: $1
+    systemimage: $1
     LOCAL_SRC_FILES := $1.c
     LOCAL_MODULE_PATH := $(TARGET_OUT_EXECUTABLES)/pm-qa/$(module_name)
     include $(BUILD_EXECUTABLE)

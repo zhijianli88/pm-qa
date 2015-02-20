@@ -9,6 +9,7 @@ define $(module_name)_add_executable
     LOCAL_MODULE_CLASS := tests
     LOCAL_MODULE := $1.sh
     systemtarball: $1.sh
+    systemimage: $1.sh
     LOCAL_SRC_FILES := $1.sh
     LOCAL_MODULE_PATH := $(TARGET_OUT_EXECUTABLES)/pm-qa/$(module_name)
     include $(BUILD_PREBUILT)
@@ -20,6 +21,7 @@ $(foreach item,$(test_num),$(eval $(call $(module_name)_add_executable, $(module
 include $(CLEAR_VARS)
 LOCAL_MODULE := cpuidle_killer
 systemtarball: cpuidle_killer
+systemimage: cpuidle_killer
 LOCAL_SRC_FILES:= cpuidle_killer.c
 LOCAL_SHARED_LIBRARIES := libcutils libc
 LOCAL_MODULE_TAGS := tests
