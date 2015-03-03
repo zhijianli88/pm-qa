@@ -1,0 +1,1 @@
+test that the sched_domain files are present and show the topology related flags
