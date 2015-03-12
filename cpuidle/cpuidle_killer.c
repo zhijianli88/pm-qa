@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/timex.h>
+#include <sys/time.h>
 #ifdef ANDROID
 /* 
 * As of 5.0.0, Bionic provides timex, but not the
