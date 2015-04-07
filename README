@@ -1,5 +1,5 @@
-General Info
-============
+Commands
+========
 - In order to run the tests, invoke as root:
 
 	make check
@@ -12,20 +12,64 @@ General Info
 
 	make -C cpufreq check
 
-- The test specifications can be found at
+
+Test Specifications
+===================
+The test specifications can be found at:
 
 https://wiki.linaro.org/WorkingGroups/PowerManagement/Resources/TestSuite/PmQaSpecification
 
-Other info
-==========
-- PM-QA is one of the tools in the external opensource modules in the external
-  path of android. For building on android, the makefile Android.mk is used to
-  build the testsuite with a makefile for each subtest.
-- Incase you are extending a subtest, say a new script which will test a
-  feature. Add the test number in the Android.mk, in addition to this if its
-  using a source file (say .c), add the source file in the Android.mk so that
-  it gets built.
-- LAVA scripts are used to trigger the pm-qa tests.
-- Similarly for non-android adding a script and txt (test description) pair is
-  needed to extent the suite.
-=======
+
+Bugs
+====
+If you believe that you have encountered a bug, please file a bug report on
+Linaro Bugzilla at https://bugs.linaro.org. Once you log in, click on
+"New" --> "Power Management" --> "PM-QA" as the component. Then fill
+in the form.
+
+Helpful tips for filing a bug report:
+    1. Provide logs, be verbose as possible
+    2. Outline steps to reproduce the bug
+    3. Describe the environment you are running PM-QA on (e.g. Android,
+        OpenEmbedded, Ubuntu, etc.)
+    4. What hardware you're using
+
+Questions/Comments
+==================
+Please submit questions and comments to the linaro-dev mailing list at
+linaro-dev@lists.linaro.org with "PM-QA" as part of the subject.
+
+Contributions
+=============
+If you wish to submit patches to improve PM-QA, please send them to
+the linaro-dev mailing list at linaro-dev@lists.linaro.org with
+"PATCH PM-QA" as the subject prefix.
+
+All scripts in PM-QA must be POSIX-compliant and cannot use any
+bashisms. At a minimum, they must run in Android and Ubuntu
+environment and have text files that include their descriptions.
+
+Additional notes on new tests
+=============================
+PM-QA can be extended with more functional tests by following a few
+simple rules.
+
+a. Add the test (usually a shell script) and its associated
+description (in a .txt file with the same name) in the appropriate
+subdirectory
+b. Change the Android.mk makefile in the subdirectory as appropriate.
+You will need to change the 'test_num' variable at a minimum. If
+you're using other source files (say .c), add that to the makefile as
+well.
+c. Create a draft specification for your test that can be added to the
+wiki page[1]
+d. Make sure your shell scripts do not use bash-specific constructs.
+Run them with the #!/bin/sh as the interpreter directive instead of
+#!/bin/bash.
+e. PM-QA can be found in the external opensource modules in the
+external path of android sources hosted at Linaro. It is synced with
+the latest version of PM-QA everytime a new release is made.
+Android.mk makefiles are used to build the test suite - there is one in
+each sub-directory.
+
+[1] https://wiki.linaro.org/WorkingGroups/PowerManagement/Resources/TestSuite/PmQaSpecification
