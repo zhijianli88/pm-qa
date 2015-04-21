@@ -1,0 +1,5 @@
+Test capacity calculation (this is based on
+the algorithm in arch/arm/kernel/topology.c),
+make sure that the information in
+/sys/firmware/devicetree/base/cpus corresponds
+to that reported by the kernel log.
