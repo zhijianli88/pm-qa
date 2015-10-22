@@ -157,7 +157,7 @@ int main(int arg_count, char *argv[])
 
 		if (ret) {
 			printf("Error setting affinity on pthread attribute\n");
-			printf("i: %i\n", i);
+			printf("i: %li\n", i);
 			printf("Error: %s\n", strerror(ret));
 			return ret;
 		}
@@ -171,7 +171,7 @@ int main(int arg_count, char *argv[])
 		ret = pthread_create(&p_thread_ptr[i], &p[i],
 							do_loop, (void *)i);
 		if (ret < 0)
-			printf("Error pthread_create failed for cpu%d\n", i);
+			printf("Error pthread_create failed for cpu%ld\n", i);
 
 #ifdef ANDROID
 		CPU_ZERO(&cpuset);
