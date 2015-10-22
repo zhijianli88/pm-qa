@@ -188,16 +188,16 @@ wait_latency() {
 
 frequnit() {
     freq=$1
-    ghz=$(echo "scale=1;($freq / 1000000)" | bc -l)
-    mhz=$(echo "scale=1;($freq / 1000)" | bc -l)
+    ghz=$(echo $freq | awk '{printf "%.1f", ($1 / 1000000)}')
+    mhz=$(echo $freq | awk '{printf "%.1f", ($1 / 1000)}')
 
-    ghz_value=$(echo "($ghz > 1.0)" | bc -l)
+    ghz_value=$(echo $ghz | awk '{printf "%f", ($1 > 1.0)}')
     if [ "$ghz_value" = "1" ]; then
 	echo $ghz GHz
 	return 0
     fi
 
-    mhz_value=$(echo "($mhz > 1.0)" | bc -l)
+    mhz_value=$(echo $mhz | awk '{printf "%f", ($1 > 1.0)}')
     if [ "$mhz_value" = "1" ];then
 	echo $mhz MHz
 	return 0

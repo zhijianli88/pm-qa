@@ -42,7 +42,7 @@ compute_freq_ratio() {
 	return 1
     fi
 
-    value=$(echo "scale=3;($result / $freq)" | bc -l)
+    value=$(echo $result $freq | awk '{ printf "%.3f", $1 / $2 }')
     eval $freq_results_array$index=$value
     eval export $freq_results_array$index     
     index=$((index + 1))
@@ -53,7 +53,7 @@ compute_freq_ratio_sum() {
     sum=0
 
     res=$(eval echo \$$freq_results_array$index)
-    sum=$(echo "($sum + $res)" | bc -l)
+    sum=$(echo $sum $res | awk '{ printf "%f", $1 + $2 }')
     index=$((index + 1))
 
 }
@@ -63,14 +63,14 @@ __check_freq_deviation() {
     res=$(eval echo \$$freq_results_array$index)
 
     # compute deviation
-    dev=$(echo "scale=3;((( $res - $avg ) / $avg) * 100 )" | bc -l)
+    dev=$(echo $res $avg | awk '{printf "%.3f", (($1 - $2) / $2) * 100}')
 
     # change to absolute
     dev=$(echo $dev | awk '{ print ($1 >= 0) ? $1 : 0 - $1}')
 
     index=$((index + 1))
 
-    res=$(echo "($dev > 5.0)" | bc -l)
+    res=$(echo $dev | awk '{printf "%f", ($dev > 5.0)}')
     if [ "$res" = "1" ]; then
 	return 1
     fi
@@ -97,7 +97,7 @@ check_deviation() {
 
     for_each_frequency $cpu compute_freq_ratio_sum
 
-    avg=$(echo "scale=3;($sum / $index)" | bc -l)
+    avg=$(echo $sum $index | awk '{ printf "%.3f", $1 / $2}')
 
     for_each_frequency $cpu check_freq_deviation
 }
