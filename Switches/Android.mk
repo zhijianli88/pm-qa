@@ -4,6 +4,6 @@ LOCAL_MODULE_TAGS := eng
 LOCAL_MODULE_CLASS := tests
 LOCAL_MODULE := Switches.sh
 LOCAL_SRC_FILES := Switches.sh
-LOCAL_MODULE_PATH := $(TARGET_OUT_EXECUTABLES)/pm-qa
+LOCAL_MODULE_PATH := $(TARGET_OUT_EXECUTABLES)/pm-qa/Switches
 systemimage: Switches.sh
 include $(BUILD_PREBUILT)
