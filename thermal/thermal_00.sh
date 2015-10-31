@@ -29,21 +29,35 @@
 
 check_cooling_device_type() {
     all_zones=$(ls $THERMAL_PATH | grep "cooling_device['$MAX_CDEV']")
-    echo "Cooling Device list:"
-    for i in $all_zones; do
-	type=$(cat $THERMAL_PATH/$i/type)
-	echo "-    $type"
-    done
+    echo "Cooling Device list"
+    echo "-------------------"
+    if [ -z "$all_zones" ]; then
+	echo "- None"
+    else
+        for i in $all_zones; do
+	    type=$(cat $THERMAL_PATH/$i/type)
+            echo $i
+	    echo "- $type"
+        done
+    fi
+    echo "\n"
 }
 
 check_thermal_zone_type() {
     all_zones=$(ls $THERMAL_PATH | grep "thermal_zone['$MAX_ZONE']")
-    echo "Thermal Zone list:"
-    for i in $all_zones; do
-	type=$(cat $THERMAL_PATH/$i/type)
-	echo "-    $type"
-    done
+    echo "Thermal Zone list"
+    echo "-----------------"
+    if [ -z "$all_zones" ]; then
+        echo "- None"
+    else
+        for i in $all_zones; do
+	    type=$(cat $THERMAL_PATH/$i/type)
+            echo $i
+	    echo "- $type"
+        done
+    fi
+    echo "\n"
 }
 
-for_each_thermal_zone check_thermal_zone_type
-for_each_thermal_zone check_cooling_device_type
+check_thermal_zone_type
+check_cooling_device_type
