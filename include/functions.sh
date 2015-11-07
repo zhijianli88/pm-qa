@@ -408,7 +408,7 @@ is_root() {
         ret=$(id -u)
     else
         # for android
-        ret=$(id | sed -n 's/uid=//p' | sed -n 's/(root) [a-z]*=[0-9]*(log)//p')
+        ret=$(id | awk '{if ($1) print $1}' | sed 's/[^0-9]*//g')
     fi
     return $ret
 }
