@@ -26,7 +26,6 @@
 # URL : https://wiki.linaro.org/WorkingGroups/PowerManagement/Resources/TestSuite/PmQaSpecification#thermal_03
 
 . ../include/functions.sh
-. ../include/thermal_functions.sh
 
 CPU_HEAT_BIN=../utils/heat_cpu
 cpu_pid=0

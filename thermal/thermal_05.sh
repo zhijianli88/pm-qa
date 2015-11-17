@@ -26,7 +26,6 @@
 # URL : https://wiki.linaro.org/WorkingGroups/PowerManagement/Resources/TestSuite/PmQaSpecification#thermal_05
 
 . ../include/functions.sh
-. ../include/thermal_functions.sh
 
 verify_cpufreq_cooling_device_action() {
     dirpath=$THERMAL_PATH/$1

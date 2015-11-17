@@ -26,7 +26,6 @@
 # URL : https://wiki.linaro.org/WorkingGroups/PowerManagement/Resources/TestSuite/PmQaSpecification#thermal_01
 
 . ../include/functions.sh
-. ../include/thermal_functions.sh
 
 ATTRIBUTES="mode temp type uevent"
 

@@ -26,7 +26,6 @@
 # URL : https://wiki.linaro.org/WorkingGroups/PowerManagement/Doc/QA/Scripts#thermal_00
 
 . ../include/functions.sh
-. ../include/thermal_functions.sh
 
 check_cooling_device_type() {
     all_zones=$(ls $THERMAL_PATH | grep "cooling_device['$MAX_CDEV']")
