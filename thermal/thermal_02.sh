@@ -26,7 +26,6 @@
 # URL : https://wiki.linaro.org/WorkingGroups/PowerManagement/Resources/TestSuite/PmQaSpecification#thermal_02
 
 . ../include/functions.sh
-. ../include/thermal_functions.sh
 
 CDEV_ATTRIBUTES="cur_state max_state type uevent"
 

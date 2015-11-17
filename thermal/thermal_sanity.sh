@@ -24,7 +24,6 @@
 #
 
 . ../include/functions.sh
-. ../include/thermal_functions.sh
 
 is_root
 if [ $? -ne 0 ]; then
