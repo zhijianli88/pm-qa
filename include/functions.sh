@@ -169,20 +169,30 @@ wait_latency() {
 
     # consider per-policy governor case
     if [ -e $CPU_PATH/$wait_latency_cpu/cpufreq/$gov ]; then
-	sampling_rate=$(cat $CPU_PATH/$wait_latency_cpu/cpufreq/$gov/sampling_rate)
+        #try one path to see if the sampling_rate can be found
+        if [ -e $CPU_PATH/$wait_latency_cpu/cpufreq/$gov/sampling_rate ]; then
+            sampling_rate=$(cat $CPU_PATH/$wait_latency_cpu/cpufreq/$gov/sampling_rate)
+        else
+            # try another path to get the sampling_rate
+            if [ -e $CPU_PATH/cpufreq/$gov/sampling_rate ]; then
+                sampling_rate=$(cat $CPU_PATH/cpufreq/$gov/sampling_rate)
+            else
+                return 1
+            fi
+        fi
     else
-        sampling_rate=$(cat $CPU_PATH/cpufreq/$gov/sampling_rate)
+        return 1
     fi
     sampling_rate=$((sampling_rate * 1000)) # unit nsec
 
     latency=$(cat $cpufreq_dirpath/cpuinfo_transition_latency)
     if [ $? -ne 0 ]; then
-	return 1
+        return 1
     fi
 
     nrfreq=$(cat $cpufreq_dirpath/scaling_available_frequencies | wc -w)
     if [ $? -ne 0 ]; then
-	return 1
+        return 1
     fi
 
     nrfreq=$((nrfreq + 1))
