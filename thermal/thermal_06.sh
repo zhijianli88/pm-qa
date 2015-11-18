@@ -109,5 +109,9 @@ check_trip_point_change() {
 
 trap "heater_kill; sigtrap" HUP INT TERM
 
-for_each_thermal_zone check_trip_point_change
+if [ -z "$thermal_zones"]; then
+   log_skip "No thermal zones found"
+else
+    for_each_thermal_zone check_trip_point_change
+fi
 test_status_show

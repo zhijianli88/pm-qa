@@ -58,26 +58,23 @@ check_thermal_zone_mode() {
 }
 
 check_thermal_zone_trip_level() {
-
-    thermal_zones=$(ls $THERMAL_PATH | grep "thermal_zone['$MAX_ZONE']")
     for thermal_zone in $thermal_zones; do
-	for_each_trip_point_of_zone $thermal_zone "validate_trip_level" || return 1
+        for_each_trip_point_of_zone $thermal_zone "validate_trip_level" || return 1
     done
 }
 
 check_thermal_zone_bindings() {
-
-    thermal_zones=$(ls $THERMAL_PATH | grep "thermal_zone['$MAX_ZONE']")
     for thermal_zone in $thermal_zones; do
-	for_each_binding_of_zone $thermal_zone "validate_trip_bindings" || return 1
+        for_each_binding_of_zone $thermal_zone "validate_trip_bindings" || return 1
     done
 }
 
-for_each_thermal_zone check_thermal_zone_attributes
-
-for_each_thermal_zone check_thermal_zone_mode
-
-check_thermal_zone_trip_level
-
-check_thermal_zone_bindings
+if [ -z "$thermal_zones"]; then
+   log_skip "No thermal zones found"
+else
+    for_each_thermal_zone check_thermal_zone_attributes
+    for_each_thermal_zone check_thermal_zone_mode
+    check_thermal_zone_trip_level
+    check_thermal_zone_bindings
+fi
 test_status_show
