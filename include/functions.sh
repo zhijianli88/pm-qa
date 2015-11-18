@@ -43,8 +43,6 @@ MAX_CDEV=0-50
 scaling_freq_array="scaling_freq"
 mode_array="mode_list"
 thermal_gov_array="thermal_governor_backup"
-thermal_zones=$(ls $THERMAL_PATH | grep "thermal_zone['$MAX_ZONE']")
-
 
 test_status_show() {
     if [ $fail_count -ne 0 ]; then
@@ -454,13 +452,13 @@ check_valid_temp() {
 }
 
 for_each_thermal_zone() {
-
+    thermal_zones=$(ls $THERMAL_PATH | grep "thermal_zone['$MAX_ZONE']")
     thermal_func=$1
     shift 1
 
     for thermal_zone in $thermal_zones; do
-	INC=0
-	$thermal_func $thermal_zone $@
+        INC=0
+        $thermal_func $thermal_zone $@
     done
 
     return 0
@@ -621,7 +619,7 @@ get_trip_id() {
 }
 
 disable_all_thermal_zones() {
-
+    thermal_zones=$(ls $THERMAL_PATH | grep "thermal_zone['$MAX_ZONE']")
     index=0
 
     for thermal_zone in $thermal_zones; do
@@ -636,7 +634,7 @@ disable_all_thermal_zones() {
 }
 
 enable_all_thermal_zones() {
-
+    thermal_zones=$(ls $THERMAL_PATH | grep "thermal_zone['$MAX_ZONE']")
     index=0
 
     for thermal_zone in $thermal_zones; do
@@ -690,7 +688,7 @@ kill_glmark2() {
 }
 
 set_thermal_governors() {
-
+    thermal_zones=$(ls $THERMAL_PATH | grep "thermal_zone['$MAX_ZONE']")
     gov=$1
     index=0
 
@@ -706,7 +704,7 @@ set_thermal_governors() {
 }
 
 restore_thermal_governors() {
-
+    thermal_zones=$(ls $THERMAL_PATH | grep "thermal_zone['$MAX_ZONE']")
     index=0
 
     for thermal_zone in $thermal_zones; do
