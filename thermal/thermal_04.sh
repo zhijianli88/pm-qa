@@ -39,12 +39,13 @@ verify_cooling_device_temp_change() {
     dirpath=$THERMAL_PATH/$1
     cdev_name=$1
     shift 1
-    tzonepath=$THERMAL_PATH/thermal_zone0
-    test -d $tzonepath
+    check_for_thermal_zones
     if [ $? -ne 0 ] ; then
-	echo "No thermal zone present"
-	return 1;
+        log_skip "No thermal zones found."
+	    return 1
     fi
+
+    tzonepath="$THERMAL_PATH/thermal_zone0"
     max_state=$(cat $dirpath/max_state)
     prev_state_val=$(cat $dirpath/cur_state)
 
