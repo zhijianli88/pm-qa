@@ -725,3 +725,13 @@ restore_thermal_governors() {
 
     return 0
 }
+
+check_for_thermal_zones()
+{
+    thermal_zones=$(ls $THERMAL_PATH | grep "thermal_zone['$MAX_ZONE']" 2>/dev/null)
+    if [ ! -z "$thermal_zones" ]; then
+        return 0
+    else
+        return 1
+    fi
+}
