@@ -39,7 +39,10 @@ check_notification() {
     # damn ! udevadm is buffering the output, we have to use a temp file
     # to retrieve the output
 
-    rm -f $TMPFILE
+    if [ ! -f "$TMPFILE" ]; then
+        touch $TMPFILE
+    fi
+
     $UEVENT_READER $TMPFILE &
     pid=$!
     sleep 1
