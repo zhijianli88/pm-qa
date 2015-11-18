@@ -59,20 +59,23 @@ compute_freq_ratio_sum() {
 }
 
 __check_freq_deviation() {
-
     res=$(eval echo \$$freq_results_array$index)
 
-    # compute deviation
-    dev=$(echo $res $avg | awk '{printf "%.3f", (($1 - $2) / $2) * 100}')
+    if [ ! -z "$res" ]; then
+        # compute deviation
+        dev=$(echo $res $avg | awk '{printf "%.3f", (($1 - $2) / $2) * 100}')
 
-    # change to absolute
-    dev=$(echo $dev | awk '{ print ($1 >= 0) ? $1 : 0 - $1}')
+        # change to absolute
+        dev=$(echo $dev | awk '{ print ($1 >= 0) ? $1 : 0 - $1}')
 
-    index=$((index + 1))
+        index=$((index + 1))
+        res=$(echo $dev | awk '{printf "%f", ($dev > 5.0)}')
 
-    res=$(echo $dev | awk '{printf "%f", ($dev > 5.0)}')
-    if [ "$res" = "1" ]; then
-	return 1
+        if [ "$res" = "1" ]; then
+            return 1
+        fi
+    else
+        return 1
     fi
 
     return 0
