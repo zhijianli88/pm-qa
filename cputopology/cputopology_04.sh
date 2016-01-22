@@ -121,9 +121,9 @@ verify_capacity()
     fi
 
     calc_mid_capacity
-    dt_cpus=$(ls -1 /sys/firmware/devicetree/base/cpus | egrep "cpu@.{1,2}$")
+    dt_cpus=$(ls /sys/firmware/devicetree/base/cpus | egrep "cpu@.{1,2}$")
     verify_cpu_capacity
-    dt_cpus=$(ls -1 /sys/firmware/devicetree/base/cpus | egrep "cpu@.{3,4}$")
+    dt_cpus=$(ls /sys/firmware/devicetree/base/cpus | egrep "cpu@.{3,4}$")
     verify_cpu_capacity
 }
 
