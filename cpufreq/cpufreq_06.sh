@@ -31,7 +31,6 @@ CPUCYCLE=../utils/cpucycle
 freq_results_array="results"
 
 compute_freq_ratio() {
-    index=0
     cpu=$1
     freq=$2
 
@@ -49,25 +48,18 @@ compute_freq_ratio() {
 }
 
 compute_freq_ratio_sum() {
-    index=0
-    sum=0
-
     res=$(eval echo \$$freq_results_array$index)
     sum=$(echo $sum $res | awk '{ printf "%f", $1 + $2 }')
     index=$((index + 1))
-
 }
 
 __check_freq_deviation() {
     res=$(eval echo \$$freq_results_array$index)
-
     if [ ! -z "$res" ]; then
         # compute deviation
         dev=$(echo $res $avg | awk '{printf "%.3f", (($1 - $2) / $2) * 100}')
-
         # change to absolute
         dev=$(echo $dev | awk '{ print ($1 >= 0) ? $1 : 0 - $1}')
-
         index=$((index + 1))
         res=$(echo $dev | awk '{printf "%f", ($dev > 5.0)}')
 
@@ -85,23 +77,20 @@ check_freq_deviation() {
 
     cpu=$1
     freq=$2
-
     check "deviation for frequency $(frequnit $freq)" __check_freq_deviation
-
 }
 
 check_deviation() {
 
     cpu=$1
-
     set_governor $cpu userspace
-
+    index=0
     for_each_frequency $cpu compute_freq_ratio
-
+    index=0;sum=0
     for_each_frequency $cpu compute_freq_ratio_sum
 
     avg=$(echo $sum $index | awk '{ printf "%.3f", $1 / $2}')
-
+    index=0
     for_each_frequency $cpu check_freq_deviation
 }
 
