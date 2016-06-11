@@ -380,6 +380,7 @@ save_governors() {
         scaling_gov_value=$(cat $CPU_PATH/$cpu/cpufreq/scaling_governor)
         eval $gov_array$index=$scaling_gov_value
         eval export $gov_array$index
+        index=$((index + 1))
     done
 }
 
