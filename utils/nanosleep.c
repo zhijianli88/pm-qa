@@ -27,6 +27,8 @@
 #include <errno.h>
 #include <time.h>
 
+#define SECOND 1000000000 /* in nanoseconds */
+
 int main(int argc, char *argv[])
 {
 	struct timespec req = { 0 }, rem = { 0 };
@@ -36,7 +38,13 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 
-	req.tv_nsec = atoi(argv[1]);
+	int total_nsec = atoi(argv[1]);
+
+	/* if total of nanoseconds equals or exceeds one second */
+	if (total_nsec >= SECOND) {
+		req.tv_sec = total_nsec / SECOND;
+		req.tv_nsec = total_nsec % SECOND;
+	}
 
 	for (;;) {
 		if (!nanosleep(&req, &rem))
