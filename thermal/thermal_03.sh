@@ -44,7 +44,13 @@ check_temperature_change() {
 
     init_temp=$(cat $dirpath/temp)
     $CPU_HEAT_BIN &
-    cpu_pid=$(ps | grep heat_cpu| awk '{print $1}')
+
+    get_os
+    if [ $? -eq 1 ]; then
+        cpu_pid=$(ps | grep heat_cpu| awk '{print $1}')
+    else
+        cpu_pid=$(ps | grep heat_cpu| awk '{print $2}')
+    fi
     test -z $cpu_pid && cpu_pid=0
     check "start cpu heat binary" "test $cpu_pid -ne 0"
     test $cpu_pid -eq 0 && return
