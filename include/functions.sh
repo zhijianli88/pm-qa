@@ -625,7 +625,9 @@ store_scaling_maxfreq() {
     for cpu in $cpus; do
         scaling_freq_max_value=$(cat $CPU_PATH/$cpu/cpufreq/scaling_max_freq)
         eval $scaling_freq_array$index=$scaling_freq_max_value
-        eval echo $scaling_freq_array$index
+        eval export $scaling_freq_array$index
+
+        index=$((index + 1))
     done
 
     return 0
