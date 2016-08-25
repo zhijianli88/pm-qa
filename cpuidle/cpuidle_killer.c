@@ -6,16 +6,19 @@
 #include <sys/time.h>
 #ifdef ANDROID
 /* 
-* As of 5.0.0, Bionic provides timex, but not the
+* Bionic prior to 7.0.0 provides timex, but not the
 * adjtimex interface.
-* However, the kernel does.
+* Bionic 7.0.0 adds adjtimex, but there's no define
+* to check for it, so we rename and #define our
+* version to not get a symbol clash.
 */
 #include <linux/timex.h> /* for struct timex */
 #include <asm/unistd.h> /* for __NR_adjtimex */
-static int adjtimex(struct timex *buf)
+static int adj_timex(struct timex *buf)
 {
 	return syscall(__NR_adjtimex, buf);
 }
+#define adjtimex adj_timex
 #endif
 #include <sys/types.h>
 #include <sys/wait.h>
