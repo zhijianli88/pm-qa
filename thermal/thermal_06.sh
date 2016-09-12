@@ -113,6 +113,11 @@ check_for_thermal_zones
 if [ $? -ne 0 ]; then
    log_skip "No thermal zones found"
 else
-    for_each_thermal_zone check_trip_point_change
+    check_for_glmark2
+    if [ $? -ne 0 ]; then
+        log_skip "glmark2 not found"
+    else
+        for_each_thermal_zone check_trip_point_change
+    fi
 fi
 test_status_show
