@@ -674,6 +674,16 @@ enable_all_thermal_zones() {
 GPU_HEAT_BIN=/usr/bin/glmark2
 gpu_pid=0
 
+check_for_glmark2() {
+    glmark2_found=$(which glmark2)
+
+    if [ $? -ne 0 ]; then
+        return 1
+    else
+        return 0
+    fi
+}
+
 start_glmark2() {
     if [ -n "$ANDROID" ]; then
         am start org.linaro.glmark2/.Glmark2Activity
